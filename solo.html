@@ -3,22 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SOLO LEVELING</title>
     <meta name="theme-color" content="#0a0018">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="apple-mobile-web-app-title" content="SOLO LEVELING">
     <link rel="icon" href="solo.png" type="image/png">
     <link rel="manifest" href="manifest.json">
-    <title>SOLO LEVELING</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Rajdhani:wght@300;500;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body {
             background: radial-gradient(ellipse at 30% 20%, #03050b, #000000);
             font-family: 'Orbitron', 'Cairo', 'Rajdhani', monospace;
@@ -35,7 +29,6 @@
             background: repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.03) 0px, rgba(0, 255, 255, 0.03) 2px, transparent 2px, transparent 6px);
             pointer-events: none;
             z-index: 100;
-            transition: background 0.5s ease;
         }
         .cyber-grid {
             position: fixed;
@@ -45,9 +38,7 @@
             background-size: 40px 40px;
             pointer-events: none;
             z-index: 0;
-            transition: background-image 0.5s ease;
         }
-
         body.s-rank-theme {
             background: radial-gradient(ellipse at 30% 20%, #0b0015, #020008);
         }
@@ -86,58 +77,28 @@
             box-shadow: -5px 0 15px #b77eff;
             text-shadow: 0 0 5px #d6aaff;
         }
-        body.s-rank-theme .stat-panel,
-        body.s-rank-theme .quest-panel {
+        body.s-rank-theme .stat-panel, body.s-rank-theme .quest-panel {
             background: rgba(18, 0, 35, 0.85);
             border-color: #b77eff;
             box-shadow: 0 0 15px rgba(160, 100, 255, 0.4);
         }
-        body.s-rank-theme .stat-panel h2,
-        body.s-rank-theme .stat-panel h3,
-        body.s-rank-theme .quest-panel h3 {
+        body.s-rank-theme .stat-panel h2, body.s-rank-theme .stat-panel h3, body.s-rank-theme .quest-panel h3 {
             color: #d6aaff;
             text-shadow: 0 0 6px #b77eff;
         }
-        body.s-rank-theme .stat-row {
-            color: #f0e2ff;
-        }
-        body.s-rank-theme .btn-system {
-            border-color: #b77eff;
-            color: #e0b3ff;
-        }
-        body.s-rank-theme .btn-system:hover {
-            background: #b77eff;
-            color: #1a002a;
-            box-shadow: 0 0 15px #d6aaff;
-        }
-        body.s-rank-theme .exercise-tile {
-            background: #130025;
-            border-right-color: #b77eff;
-        }
-        body.s-rank-theme .ex-name-en {
-            color: #e8bcff;
-        }
-        body.s-rank-theme .ex-name-ar {
-            color: #ccaaff;
-        }
-        body.s-rank-theme .xp-bar-bg {
-            background: #2a1040;
-            border-color: #b77eff;
-        }
-        body.s-rank-theme .xp-fill {
-            background: linear-gradient(90deg, #b77eff, #8a4dff);
-            box-shadow: 0 0 4px #b77eff;
-        }
-        body.s-rank-theme .penalty-banner {
-            background: #2a0022;
-            border-color: #ff77aa;
-            color: #ffbbdd;
-        }
+        body.s-rank-theme .stat-row { color: #f0e2ff; }
+        body.s-rank-theme .btn-system { border-color: #b77eff; color: #e0b3ff; }
+        body.s-rank-theme .btn-system:hover { background: #b77eff; color: #1a002a; box-shadow: 0 0 15px #d6aaff; }
+        body.s-rank-theme .exercise-tile { background: #130025; border-right-color: #b77eff; }
+        body.s-rank-theme .ex-name-en { color: #e8bcff; }
+        body.s-rank-theme .ex-name-ar { color: #ccaaff; }
+        body.s-rank-theme .xp-bar-bg { background: #2a1040; border-color: #b77eff; }
+        body.s-rank-theme .xp-fill { background: linear-gradient(90deg, #b77eff, #8a4dff); box-shadow: 0 0 4px #b77eff; }
+        body.s-rank-theme .penalty-banner { background: #2a0022; border-color: #ff77aa; color: #ffbbdd; }
 
         .player-title-highlight {
             color: #88ccff;
             text-shadow: 0 0 6px #44aaff;
-            transition: all 0.3s ease;
         }
         body.s-rank-theme .player-title-highlight {
             color: #e0b3ff;
@@ -163,7 +124,6 @@
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
             padding: 1.8rem 1rem;
             height: fit-content;
-            transition: all 0.3s ease;
         }
         .system-title {
             font-family: 'Orbitron', 'Cairo', monospace;
@@ -223,13 +183,8 @@
             flex: 1;
             min-width: 280px;
         }
-        .page {
-            display: none;
-            animation: glitchFade 0.3s cubic-bezier(0.2, 1, 0.3, 1);
-        }
-        .active-page {
-            display: block;
-        }
+        .page { display: none; animation: glitchFade 0.3s cubic-bezier(0.2, 1, 0.3, 1); }
+        .active-page { display: block; }
         @keyframes glitchFade {
             0% { opacity: 0; transform: translateX(8px); filter: blur(2px); }
             100% { opacity: 1; transform: translateX(0); filter: blur(0); }
@@ -472,7 +427,7 @@
             <div class="sys-nav-item" data-page="quests">[ التمارين ]</div>
             <div class="sys-nav-item" data-page="stats">[ القدرات ]</div>
             <div class="sys-nav-item" data-page="records">[ سجل العقوبات ]</div>
-            <button id="installAppBtn" class="btn-system install-btn">📲 تثبيت التطبيق</button>
+            <button id="installAppBtn" class="btn-system install-btn">تثبيت التطبيق</button>
         </div>
 
         <div class="system-main">
@@ -543,12 +498,11 @@
     </div>
 
     <script>
-        // ------------------- PWA: إنشاء manifest.json و service worker حقيقي (وليس blob) -------------------
+        // ------------------- PWA setup -------------------
         (function setupPWA() {
-            // إنشاء manifest.json ديناميكيًا باستخدام createObjectURL ولكن مع ضمان وجودها
             const manifestData = {
-                name: "نظام الصياد - Solo Leveling",
-                short_name: "SoloSystem",
+                name: "SOLO LEVELING",
+                short_name: "SoloLeveling",
                 description: "نظام التمارين اليومي المستوحى من أنمي Solo Leveling",
                 start_url: ".",
                 display: "standalone",
@@ -563,7 +517,6 @@
                     }
                 ]
             };
-            // محاولة تسجيل manifest
             const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: "application/json"});
             const manifestURL = URL.createObjectURL(manifestBlob);
             let manifestLink = document.querySelector('link[rel="manifest"]');
@@ -574,65 +527,46 @@
             }
             manifestLink.href = manifestURL;
 
-            // Service Worker بسيط للتخزين المؤقت ودعم PWA
             if ('serviceWorker' in navigator) {
                 const swCode = `
                     const CACHE_NAME = 'solo-leveling-cache-v1';
-                    const urlsToCache = [
-                        './',
-                        'solo.png'
-                    ];
+                    const urlsToCache = ['./', 'solo.png'];
                     self.addEventListener('install', event => {
-                        event.waitUntil(
-                            caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
-                        );
+                        event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
                         self.skipWaiting();
                     });
                     self.addEventListener('fetch', event => {
-                        event.respondWith(
-                            caches.match(event.request).then(response => response || fetch(event.request))
-                        );
+                        event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
                     });
                 `;
                 const swBlob = new Blob([swCode], {type: 'application/javascript'});
                 const swURL = URL.createObjectURL(swBlob);
-                navigator.serviceWorker.register(swURL).then(reg => {
-                    console.log('Service Worker registered');
-                }).catch(err => console.warn('Service Worker registration failed:', err));
+                navigator.serviceWorker.register(swURL).catch(err => console.warn('SW registration failed:', err));
             }
         })();
 
-        // ------------------- دعم التثبيت (beforeinstallprompt) -------------------
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            const installBtn = document.getElementById('installAppBtn');
-            if (installBtn) installBtn.style.display = 'inline-block';
+            document.getElementById('installAppBtn').style.display = 'inline-block';
         });
         document.getElementById('installAppBtn').addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') console.log('تم تثبيت التطبيق');
+                await deferredPrompt.userChoice;
                 deferredPrompt = null;
             } else {
-                alert('يمكنك تثبيت هذا التطبيق عبر قائمة المتصفح (إضافة إلى الشاشة الرئيسية)');
+                alert('يمكنك تثبيت التطبيق عبر قائمة المتصفح (إضافة إلى الشاشة الرئيسية)');
             }
         });
 
-        // ------------------- منطق اللعبة الأصلي -------------------
+        // ------------------- Game logic -------------------
         let player = {
             name: "صياد",
-            xp: 0,
-            streak: 0,
-            rank: "E",
-            str: 5,
-            agi: 5,
-            vit: 5,
-            statPoints: 0,
-            completedDays: {},
-            penaltyLogs: [],
+            xp: 0, streak: 0, rank: "E",
+            str: 5, agi: 5, vit: 5, statPoints: 0,
+            completedDays: {}, penaltyLogs: [],
             lastDate: new Date().toISOString().slice(0, 10),
             penaltyMultiplier: 1.0,
             emergencyQuest: null,
@@ -640,41 +574,34 @@
             dailyProgress: { pushups: 0, situps: 0, squats: 0, plank: 0, pullups: 0 }
         };
 
-        const RANKS = ["E", "D", "C", "B", "A", "S"];
-        const RANK_STREAK_THRESHOLDS = { E: 0, D: 14, C: 35, B: 56, A: 77, S: 98 };
+        const RANKS = ["E","D","C","B","A","S"];
+        const RANK_STREAK_THRESHOLDS = { E:0, D:14, C:35, B:56, A:77, S:98 };
         const EX_DATA = {
-            pushups: { en: "PUSH-UPS", ar: "ضغط", unit: "reps", base: 100 },
-            situps: { en: "SIT-UPS", ar: "معدة", unit: "reps", base: 100 },
-            squats: { en: "SQUATS", ar: "قرفصاء", unit: "reps", base: 100 },
-            plank: { en: "PLANK", ar: "بلانك", unit: "sec", base: 300 },
-            pullups: { en: "PULL-UPS", ar: "سحب لأعلى (ثابت)", unit: "reps", base: 20 }
+            pushups: { en:"PUSH-UPS", ar:"ضغط", unit:"reps", base:100 },
+            situps: { en:"SIT-UPS", ar:"معدة", unit:"reps", base:100 },
+            squats: { en:"SQUATS", ar:"قرفصاء", unit:"reps", base:100 },
+            plank: { en:"PLANK", ar:"بلانك", unit:"sec", base:300 },
+            pullups: { en:"PULL-UPS", ar:"سحب لأعلى (ثابت)", unit:"reps", base:20 }
         };
-        const EXERCISE_IDS = ["pushups", "situps", "squats", "plank", "pullups"];
+        const EXERCISE_IDS = ["pushups","situps","squats","plank","pullups"];
 
         function getRankDifficultyMultiplier() {
             let idx = RANKS.indexOf(player.rank);
             return 1 + (idx * 0.3);
         }
-
         function getCurrentTargets() {
             let rankMult = getRankDifficultyMultiplier();
             let penaltyMult = player.penaltyMultiplier;
             let targets = {};
-            for (let id of EXERCISE_IDS) {
-                targets[id] = Math.max(1, Math.floor(EX_DATA[id].base * rankMult * penaltyMult));
-            }
+            for (let id of EXERCISE_IDS) targets[id] = Math.max(1, Math.floor(EX_DATA[id].base * rankMult * penaltyMult));
             return targets;
         }
-
         function getXpBonusMultiplier(exerciseId) {
             let bonus = 1 + (player.agi > 5 ? (player.agi - 5) * 0.01 : 0);
-            if ((exerciseId === "pushups" || exerciseId === "squats") && player.str > 5)
-                bonus += (player.str - 5) * 0.005;
-            if ((exerciseId === "plank" || exerciseId === "pullups") && player.vit > 5)
-                bonus += (player.vit - 5) * 0.005;
+            if ((exerciseId === "pushups" || exerciseId === "squats") && player.str > 5) bonus += (player.str - 5) * 0.005;
+            if ((exerciseId === "plank" || exerciseId === "pullups") && player.vit > 5) bonus += (player.vit - 5) * 0.005;
             return Math.min(2.5, bonus);
         }
-
         function updateRankByStreak() {
             let newRank = "E";
             for (let i = RANKS.length - 1; i >= 0; i--) {
@@ -700,7 +627,6 @@
             }
             applySThemeAndTitle();
         }
-
         function applySThemeAndTitle() {
             const isS = (player.rank === 'S');
             if (isS) document.body.classList.add('s-rank-theme');
@@ -711,76 +637,64 @@
             }
             document.getElementById("rankValue").innerText = player.rank;
         }
-
         function saveData() {
-            try { localStorage.setItem('solo-leveling-ar', JSON.stringify(player)); } catch (e) { }
+            try { localStorage.setItem('solo-leveling-ar', JSON.stringify(player)); } catch(e) {}
             let inp = document.getElementById("playerNameInput");
-            if (inp && inp.value !== player.name) {
-                player.name = inp.value || "صياد";
-                saveData();
-            }
+            if (inp && inp.value !== player.name) { player.name = inp.value || "صياد"; saveData(); }
             applySThemeAndTitle();
         }
-
         function loadData() {
             try {
                 let raw = localStorage.getItem('solo-leveling-ar');
                 if (raw) {
                     let saved = JSON.parse(raw);
                     player = Object.assign({}, player, saved);
-                    if (!player.dailyProgress?.pullups)
-                        player.dailyProgress = { pushups: 0, situps: 0, squats: 0, plank: 0, pullups: 0 };
+                    if (!player.dailyProgress?.pullups) player.dailyProgress = { pushups:0, situps:0, squats:0, plank:0, pullups:0 };
                     player.completedDays = saved.completedDays || {};
                     player.penaltyLogs = saved.penaltyLogs || [];
                 }
-            } catch (e) { }
+            } catch(e) {}
             document.getElementById("playerNameInput").value = player.name;
             applySThemeAndTitle();
         }
-
         function checkDateChange() {
-            let today = new Date().toISOString().slice(0, 10);
+            let today = new Date().toISOString().slice(0,10);
             if (player.lastDate !== today) {
                 let yesterdayCompleted = player.completedDays[player.lastDate] === true;
                 if (!yesterdayCompleted) {
                     player.penaltyMultiplier = 1.5;
-                    player.penaltyLogs.unshift({
-                        date: new Date().toLocaleString(),
-                        reason: "فشل في إكمال التمارين",
-                        penalty: "تم تفعيل مضاعف الأهداف ×1.5 لليوم الحالي"
-                    });
+                    player.penaltyLogs.unshift({ date: new Date().toLocaleString(), reason: "فشل في إكمال التمارين", penalty: "تم تفعيل مضاعف الأهداف ×1.5" });
                     if (player.penaltyLogs.length > 15) player.penaltyLogs.pop();
-                    showSystemMessage(`عقوبة: فشلت في إكمال التمارين أمس. اليوم جميع الأهداف مضاعفة ×1.5.`, "#f55");
+                    showSystemMessage(`عقوبة: فشلت في إكمال التمارين أمس. اليوم جميع الأهداف مضاعفة ×1.5.`,"#f55");
                     playSound("penalty");
                     player.streak = 0;
                     updateRankByStreak();
                 } else {
                     if (player.penaltyMultiplier > 1.0) {
                         player.penaltyMultiplier = 1.0;
-                        showSystemMessage(`تم إلغاء العقوبة لأنك أكملت التمارين أمس.`, "#0f0");
+                        showSystemMessage(`تم إلغاء العقوبة لأنك أكملت التمارين أمس.`,"#0f0");
                     }
                 }
-                player.dailyProgress = { pushups: 0, situps: 0, squats: 0, plank: 0, pullups: 0 };
+                player.dailyProgress = { pushups:0, situps:0, squats:0, plank:0, pullups:0 };
                 player.lastDate = today;
                 saveData();
             }
             checkCompletionAndReward();
         }
-
         function checkCompletionAndReward() {
             let targets = getCurrentTargets();
             let allDone = EXERCISE_IDS.every(id => (player.dailyProgress[id] || 0) >= targets[id]);
             let today = player.lastDate;
             if (allDone && !player.completedDays[today]) {
                 player.completedDays[today] = true;
-                let xpBonus = 1 + (player.agi > 5 ? (player.agi - 5) * 0.01 : 0);
+                let xpBonus = 1 + (player.agi > 5 ? (player.agi-5)*0.01 : 0);
                 let earned = Math.floor(100 * xpBonus);
                 player.xp += earned;
                 player.streak++;
                 player.statPoints += 3;
                 if (player.penaltyMultiplier > 1.0) player.penaltyMultiplier = 1.0;
                 updateRankByStreak();
-                showSystemMessage(`التمارين مكتملة! +${earned} XP، +3 نقاط قدرة. السلسلة: ${player.streak} يوم`, "#0f0");
+                showSystemMessage(`التمارين مكتملة! +${earned} XP، +3 نقاط قدرة. السلسلة: ${player.streak} يوم`,"#0f0");
                 playSound("complete");
                 if (player.streak >= 30 && !player.monthRewardGiven) {
                     showMonthReward();
@@ -793,7 +707,6 @@
                 saveData();
             }
         }
-
         function updateExercise(id, increment) {
             let targets = getCurrentTargets();
             let newVal = (player.dailyProgress[id] || 0) + increment;
@@ -803,7 +716,6 @@
             checkCompletionAndReward();
             renderEverything();
         }
-
         function maybeGenerateEmergencyQuest() {
             if (Math.random() < 0.20 && !player.emergencyQuest && player.penaltyMultiplier <= 1.0) {
                 const questsList = [
@@ -818,12 +730,11 @@
                 renderEverything();
             }
         }
-
         function progressEmergencyQuest() {
             if (!player.emergencyQuest) return;
             player.emergencyQuest.current++;
             if (player.emergencyQuest.current >= player.emergencyQuest.target) {
-                let bonus = Math.floor(player.emergencyQuest.rewardXP * (1 + (player.agi > 5 ? (player.agi - 5) * 0.01 : 0)));
+                let bonus = Math.floor(player.emergencyQuest.rewardXP * (1 + (player.agi > 5 ? (player.agi-5)*0.01 : 0)));
                 player.xp += bonus;
                 showSystemMessage(`المهمة الطارئة مكتملة! +${bonus} XP`, "#0f0");
                 player.emergencyQuest = null;
@@ -835,7 +746,6 @@
             saveData();
             renderEverything();
         }
-
         function playSound(type) {
             try {
                 let ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -847,54 +757,39 @@
                     osc.frequency.value = 880;
                     gain.gain.value = 0.2;
                     osc.start();
-                    gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
-                    osc.stop(ctx.currentTime + 0.4);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime+0.5);
+                    osc.stop(ctx.currentTime+0.4);
                 } else if (type === "penalty") {
                     osc.frequency.value = 220;
                     gain.gain.value = 0.3;
                     osc.start();
-                    gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.8);
-                    osc.stop(ctx.currentTime + 0.7);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime+0.8);
+                    osc.stop(ctx.currentTime+0.7);
                 } else if (type === "rankup") {
                     osc.frequency.value = 1200;
                     gain.gain.value = 0.15;
                     osc.start();
-                    osc.stop(ctx.currentTime + 0.2);
+                    osc.stop(ctx.currentTime+0.2);
                 }
                 setTimeout(() => ctx.close(), 1000);
-            } catch (e) { }
+            } catch(e) {}
         }
-
-        function showSystemMessage(msg, color = "#0ff") {
+        function showSystemMessage(msg, color="#0ff") {
             let modal = document.createElement("div");
             modal.className = "system-modal";
             modal.innerHTML = `<div class="modal-system-box"><h3 class="glitch-text">[ رسالة النظام ]</h3><p style="color:${color};">${msg}</p><button class="btn-system" id="closeSysMsg">تأكيد</button></div>`;
             document.body.appendChild(modal);
             document.getElementById("closeSysMsg").onclick = () => modal.remove();
-            setTimeout(() => { if (modal && modal.parentNode) modal.remove(); }, 5000);
+            setTimeout(() => { if(modal && modal.parentNode) modal.remove(); }, 5000);
         }
-
         function showMonthReward() {
             let modalDiv = document.createElement("div");
             modalDiv.className = "system-modal";
             modalDiv.innerHTML = `<div class="modal-system-box"><h3 class="glitch-text">[ مكافأة 30 يوماً متتالياً ]</h3><p>اختر مكافأتك:</p><button class="btn-system" id="rewardXp">+1500 XP</button><button class="btn-system" id="rewardStat">+10 نقاط قدرة</button></div>`;
             document.body.appendChild(modalDiv);
-            document.getElementById("rewardXp").onclick = () => {
-                player.xp += 1500;
-                modalDiv.remove();
-                showSystemMessage("تم منح +1500 XP.");
-                saveData();
-                renderEverything();
-            };
-            document.getElementById("rewardStat").onclick = () => {
-                player.statPoints += 10;
-                modalDiv.remove();
-                showSystemMessage("تم منح +10 نقاط قدرة.");
-                saveData();
-                renderEverything();
-            };
+            document.getElementById("rewardXp").onclick = () => { player.xp += 1500; modalDiv.remove(); showSystemMessage("تم منح +1500 XP."); saveData(); renderEverything(); };
+            document.getElementById("rewardStat").onclick = () => { player.statPoints += 10; modalDiv.remove(); showSystemMessage("تم منح +10 نقاط قدرة."); saveData(); renderEverything(); };
         }
-
         function renderExercises() {
             let container = document.getElementById("exerciseGrid");
             if (!container) return;
@@ -918,18 +813,13 @@
             document.querySelectorAll(".ex-decr").forEach(btn => btn.addEventListener("click", () => updateExercise(btn.dataset.id, -10)));
             document.querySelectorAll(".ex-incr").forEach(btn => btn.addEventListener("click", () => updateExercise(btn.dataset.id, 10)));
         }
-
         function renderEverything() {
             let inp = document.getElementById("playerNameInput");
-            if (inp && inp.value !== player.name) {
-                player.name = inp.value || "صياد";
-                saveData();
-            }
-
+            if (inp && inp.value !== player.name) { player.name = inp.value || "صياد"; saveData(); }
             document.getElementById("rankValue").innerText = player.rank;
             document.getElementById("streakValue").innerText = player.streak;
             document.getElementById("xpValue").innerText = player.xp;
-            let next = RANK_STREAK_THRESHOLDS[RANKS[RANKS.indexOf(player.rank) + 1]];
+            let next = RANK_STREAK_THRESHOLDS[RANKS[RANKS.indexOf(player.rank)+1]];
             if (next) {
                 document.getElementById("nextXpValue").innerHTML = next + " يوم";
                 let percent = Math.min(100, (player.streak / next) * 100);
@@ -947,35 +837,23 @@
             document.getElementById("statAgi").innerText = player.agi;
             document.getElementById("statVit").innerText = player.vit;
             document.getElementById("penaltyMultiplierDisplay").innerText = player.penaltyMultiplier.toFixed(2);
-
             let targets = getCurrentTargets();
             let allDone = EXERCISE_IDS.every(id => (player.dailyProgress[id] || 0) >= targets[id]);
             document.getElementById("dailyStatus").innerHTML = allDone ? "مكتمل" : "غير مكتمل";
             document.getElementById("dailyStatus").style.color = allDone ? "#0f0" : "#ff5500";
-
             let summaryHtml = EXERCISE_IDS.map(id => `<div class="stat-row"><span>${EX_DATA[id].en}<br><span style="font-size:0.7rem;">${EX_DATA[id].ar}</span></span><span>${player.dailyProgress[id] || 0} / ${targets[id]}</span></div>`).join("");
             document.getElementById("dailySummary").innerHTML = summaryHtml;
             renderExercises();
-
             let pList = document.getElementById("penaltyList");
             if (pList) {
-                pList.innerHTML = player.penaltyLogs.length
-                    ? player.penaltyLogs.map(l => `<div style="border-right:3px solid #f55; margin:6px 0; padding:5px 10px;">${l.date} — ${l.reason}<br><span style="color:#f88;">${l.penalty}</span></div>`).join("")
-                    : "<p>لا توجد عقوبات مسجلة.</p>";
+                pList.innerHTML = player.penaltyLogs.length ? player.penaltyLogs.map(l => `<div style="border-right:3px solid #f55; margin:6px 0; padding:5px 10px;">${l.date} — ${l.reason}<br><span style="color:#f88;">${l.penalty}</span></div>`).join("") : "<p>لا توجد عقوبات مسجلة.</p>";
             }
-
             let banner = document.getElementById("penaltyBanner");
             if (banner) banner.classList.toggle("show", player.penaltyMultiplier > 1.0);
-
             let emergDiv = document.getElementById("emergencyContent");
             if (emergDiv) {
                 if (player.emergencyQuest) {
-                    emergDiv.innerHTML = `
-                        <div class="emergency-box">
-                            <div class="emergency-text">${player.emergencyQuest.desc}</div>
-                            <div class="stat-row">التقدم: ${player.emergencyQuest.current} / ${player.emergencyQuest.target}</div>
-                            <button class="btn-system" id="doEmerg">تقدم +1</button>
-                        </div>`;
+                    emergDiv.innerHTML = `<div class="emergency-box"><div class="emergency-text">${player.emergencyQuest.desc}</div><div class="stat-row">التقدم: ${player.emergencyQuest.current} / ${player.emergencyQuest.target}</div><button class="btn-system" id="doEmerg">تقدم +1</button></div>`;
                     let btn = document.getElementById("doEmerg");
                     if (btn) btn.onclick = () => progressEmergencyQuest();
                 } else {
@@ -984,13 +862,11 @@
             }
             applySThemeAndTitle();
         }
-
         function init() {
             loadData();
             checkDateChange();
             maybeGenerateEmergencyQuest();
             renderEverything();
-
             document.querySelectorAll(".sys-nav-item[data-page]").forEach(nav => {
                 nav.addEventListener("click", () => {
                     let pageId = nav.dataset.page + "-page";
@@ -1000,14 +876,12 @@
                     nav.classList.add("active");
                 });
             });
-
             document.getElementById("resetGameBtn")?.addEventListener("click", () => {
                 if (confirm("تحذير: سيتم مسح كل التقدم نهائياً. هل أنت متأكد؟")) {
                     localStorage.removeItem('solo-leveling-ar');
                     location.reload();
                 }
             });
-
             document.querySelectorAll(".incStat").forEach(btn => {
                 btn.addEventListener("click", () => {
                     let stat = btn.dataset.stat;
@@ -1022,7 +896,6 @@
                     }
                 });
             });
-
             let nameInput = document.getElementById("playerNameInput");
             if (nameInput) {
                 nameInput.addEventListener("change", () => {
@@ -1031,14 +904,12 @@
                     renderEverything();
                 });
             }
-
             setInterval(() => {
                 checkDateChange();
                 maybeGenerateEmergencyQuest();
                 renderEverything();
             }, 60000);
         }
-
         window.addEventListener("load", init);
     </script>
 </body>

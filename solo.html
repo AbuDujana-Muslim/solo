@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SOLO LEVELING </title>
+    <link rel="icon" href="solo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Rajdhani:wght@300;500;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: radial-gradient(ellipse at 30% 20%, #03050b, #000000);
+            font-family: 'Orbitron', 'Cairo', 'Rajdhani', monospace;
+            color: #0ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            transition: all 0.5s ease;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.03) 0px, rgba(0, 255, 255, 0.03) 2px, transparent 2px, transparent 6px);
+            pointer-events: none;
+            z-index: 100;
+            transition: background 0.5s ease;
+        }
+        .cyber-grid {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+            transition: background-image 0.5s ease;
+        }
+
+        body.s-rank-theme {
+            background: radial-gradient(ellipse at 30% 20%, #0b0015, #020008);
+        }
+        body.s-rank-theme::before {
+            background: repeating-linear-gradient(0deg, rgba(160, 100, 255, 0.07) 0px, rgba(160, 100, 255, 0.07) 2px, transparent 2px, transparent 6px);
+        }
+        body.s-rank-theme .cyber-grid {
+            background-image: linear-gradient(rgba(160, 100, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(160, 100, 255, 0.15) 1px, transparent 1px);
+        }
+        body.s-rank-theme .system-sidebar {
+            border-color: #b77eff;
+            box-shadow: 0 0 20px rgba(160, 100, 255, 0.5);
+            background: rgba(8, 0, 20, 0.9);
+        }
+        body.s-rank-theme .system-title {
+            color: #d6aaff;
+            text-shadow: 0 0 8px #b77eff;
+            border-bottom-color: #b77eff;
+        }
+        body.s-rank-theme .player-name-section {
+            border-color: #b77eff;
+            background: rgba(80, 40, 120, 0.3);
+        }
+        body.s-rank-theme .player-name-section input {
+            border-color: #b77eff;
+            color: #e0b3ff;
+            background: #160025;
+        }
+        body.s-rank-theme .sys-nav-item {
+            background: rgba(80, 40, 120, 0.4);
+            color: #e0b3ff;
+        }
+        body.s-rank-theme .sys-nav-item.active {
+            border-left-color: #d6aaff;
+            background: linear-gradient(90deg, #c28eff30, #5a2a8a80);
+            box-shadow: -5px 0 15px #b77eff;
+            text-shadow: 0 0 5px #d6aaff;
+        }
+        body.s-rank-theme .stat-panel,
+        body.s-rank-theme .quest-panel {
+            background: rgba(18, 0, 35, 0.85);
+            border-color: #b77eff;
+            box-shadow: 0 0 15px rgba(160, 100, 255, 0.4);
+        }
+        body.s-rank-theme .stat-panel h2,
+        body.s-rank-theme .stat-panel h3,
+        body.s-rank-theme .quest-panel h3 {
+            color: #d6aaff;
+            text-shadow: 0 0 6px #b77eff;
+        }
+        body.s-rank-theme .stat-row {
+            color: #f0e2ff;
+        }
+        body.s-rank-theme .btn-system {
+            border-color: #b77eff;
+            color: #e0b3ff;
+        }
+        body.s-rank-theme .btn-system:hover {
+            background: #b77eff;
+            color: #1a002a;
+            box-shadow: 0 0 15px #d6aaff;
+        }
+        body.s-rank-theme .exercise-tile {
+            background: #130025;
+            border-right-color: #b77eff;
+        }
+        body.s-rank-theme .ex-name-en {
+            color: #e8bcff;
+        }
+        body.s-rank-theme .ex-name-ar {
+            color: #ccaaff;
+        }
+        body.s-rank-theme .xp-bar-bg {
+            background: #2a1040;
+            border-color: #b77eff;
+        }
+        body.s-rank-theme .xp-fill {
+            background: linear-gradient(90deg, #b77eff, #8a4dff);
+            box-shadow: 0 0 4px #b77eff;
+        }
+        body.s-rank-theme .penalty-banner {
+            background: #2a0022;
+            border-color: #ff77aa;
+            color: #ffbbdd;
+        }
+
+        .player-title-highlight {
+            color: #88ccff;
+            text-shadow: 0 0 6px #44aaff;
+            transition: all 0.3s ease;
+        }
+        body.s-rank-theme .player-title-highlight {
+            color: #e0b3ff;
+            text-shadow: 0 0 8px #c084ff;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .system-sidebar {
+            width: 280px;
+            background: rgba(0, 5, 15, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid #0ff;
+            border-radius: 0px 20px 20px 0px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            padding: 1.8rem 1rem;
+            height: fit-content;
+            transition: all 0.3s ease;
+        }
+        .system-title {
+            font-family: 'Orbitron', 'Cairo', monospace;
+            font-size: 1.6rem;
+            text-align: center;
+            border-bottom: 2px solid #0ff;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px cyan;
+        }
+        .player-name-section {
+            background: rgba(0, 30, 60, 0.5);
+            border: 1px solid #0ff;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .player-name-section input {
+            background: #02101f;
+            border: 1px solid #0ff;
+            color: #0ff;
+            font-family: 'Rajdhani', 'Cairo', monospace;
+            padding: 8px;
+            width: 100%;
+            text-align: center;
+            font-size: 1rem;
+            margin-top: 6px;
+            border-radius: 4px;
+        }
+        .player-name-section label {
+            font-size: 0.8rem;
+            color: #8cf;
+        }
+        .sys-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 20px;
+            margin: 10px 0;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 600;
+            background: rgba(0, 30, 60, 0.4);
+            font-family: 'Rajdhani', 'Cairo', monospace;
+            font-size: 0.95rem;
+        }
+        .sys-nav-item.active {
+            border-left-color: #0ff;
+            background: linear-gradient(90deg, #0ff1a, #0a2f6e80);
+            box-shadow: -5px 0 12px cyan;
+            text-shadow: 0 0 5px cyan;
+        }
+        .system-main {
+            flex: 1;
+            min-width: 280px;
+        }
+        .page {
+            display: none;
+            animation: glitchFade 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+        .active-page {
+            display: block;
+        }
+        @keyframes glitchFade {
+            0% { opacity: 0; transform: translateX(8px); filter: blur(2px); }
+            100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+        }
+        .stat-panel, .quest-panel {
+            background: rgba(0, 8, 20, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid #0ff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px rgba(0,255,255,0.2);
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            font-family: 'Rajdhani', 'Cairo', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            gap: 12px;
+        }
+        .xp-bar-bg {
+            background: #0a1a2a;
+            border-radius: 20px;
+            height: 12px;
+            overflow: hidden;
+            width: 100%;
+        }
+        .xp-fill {
+            background: linear-gradient(90deg, #0ff, #0088ff);
+            width: 0%;
+            height: 100%;
+            box-shadow: 0 0 6px cyan;
+            transition: width 0.3s ease;
+        }
+        .attribute-card {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 15px 0;
+        }
+        .attr {
+            background: #001d32;
+            padding: 12px 8px;
+            text-align: center;
+            border-radius: 8px;
+            border-bottom: 2px solid cyan;
+            font-family: 'Orbitron', 'Cairo', monospace;
+        }
+        .attr span {
+            display: block;
+            font-size: 1.4rem;
+            margin: 6px 0;
+            font-family: 'Rajdhani', 'Cairo', monospace;
+        }
+        .stat-desc-box {
+            background: rgba(0, 30, 60, 0.5);
+            border-left: 4px solid cyan;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+            font-family: 'Rajdhani', 'Cairo', monospace;
+            font-weight: 600;
+            line-height: 1.6;
+            text-align: right;
+        }
+        .stat-desc-box p {
+            margin-bottom: 8px;
+        }
+        .btn-system {
+            background: transparent;
+            border: 1px solid cyan;
+            color: cyan;
+            padding: 8px 16px;
+            font-family: 'Orbitron', 'Cairo', monospace;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 5px 5px 5px 0;
+            border-radius: 4px;
+        }
+        .btn-system:hover {
+            background: cyan;
+            color: black;
+            box-shadow: 0 0 15px cyan;
+        }
+        .danger-btn {
+            border-color: #f55;
+            color: #f88;
+        }
+        .danger-btn:hover {
+            background: #f55;
+            color: black;
+            box-shadow: 0 0 15px #f55;
+        }
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+        .exercise-tile {
+            background: #021a2a;
+            padding: 1rem;
+            border-radius: 12px;
+            border-right: 4px solid cyan;
+            font-family: 'Rajdhani', 'Cairo', monospace;
+            font-weight: 600;
+        }
+        .glitch-text {
+            text-shadow: 2px 0 #0ff, -2px 0 #f0f;
+            animation: glitch 0.3s infinite alternate;
+        }
+        @keyframes glitch {
+            0% { text-shadow: -1px 0 cyan; }
+            100% { text-shadow: 1px 0 magenta; }
+        }
+        .penalty-banner {
+            display: none;
+            background: #1a0000;
+            border: 1px solid #f55;
+            color: #ff9999;
+            padding: 12px 16px;
+            font-family: 'Rajdhani', 'Cairo', monospace;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            gap: 12px;
+        }
+        .penalty-banner.show {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .system-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: zoomFlash 0.2s ease-out;
+            padding: 1rem;
+        }
+        @keyframes zoomFlash {
+            0% { transform: scale(0.9); opacity: 0; background: rgba(0,255,255,0.3); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal-system-box {
+            background: #02101f;
+            border: 2px solid cyan;
+            padding: 2rem;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            font-family: 'Orbitron', 'Cairo', monospace;
+            box-shadow: 0 0 50px cyan;
+            border-radius: 8px;
+        }
+        .flex-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .ex-name {
+            line-height: 1.5;
+        }
+        .ex-name-en {
+            font-size: 1rem;
+            color: #0ff;
+        }
+        .ex-name-ar {
+            font-size: 0.75rem;
+            color: #8cf;
+        }
+        .dashboard-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+        .dashboard-header h2 {
+            font-family: 'Orbitron', 'Cairo', monospace;
+            letter-spacing: 1px;
+            color: #0ff;
+            text-shadow: 0 0 6px cyan;
+        }
+        .emergency-box {
+            background: #0a0a1a;
+            border: 1px solid #ff5500;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+        .emergency-text {
+            font-size: 1rem;
+            color: #ffaa66;
+            margin-bottom: 6px;
+        }
+        @media (max-width: 780px) {
+            .container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .system-sidebar {
+                width: 100%;
+                border-radius: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-grid"></div>
+    <div class="container">
+        <div class="system-sidebar">
+            <div class="system-title">[ SOLO LEVELING ]</div>
+            <div class="player-name-section">
+                <label>اسم اللاعب</label>
+                <input type="text" id="playerNameInput" maxlength="20" placeholder="أدخل اسمك">
+            </div>
+            <div class="sys-nav-item active" data-page="dashboard">[ لوحة التحكم ]</div>
+            <div class="sys-nav-item" data-page="quests">[ التمارين ]</div>
+            <div class="sys-nav-item" data-page="stats">[ القدرات ]</div>
+            <div class="sys-nav-item" data-page="records">[ سجل العقوبات ]</div>
+        </div>
+
+        <div class="system-main">
+            <div id="penaltyBanner" class="penalty-banner">
+                <span>[ عقوبة ] فشلت في إكمال التمارين أمس. اليوم: الأهداف مضاعفة ×1.5 حتى تكملها.</span>
+            </div>
+
+            <div id="dashboard-page" class="page active-page">
+                <div class="stat-panel">
+                    <div class="dashboard-header">
+                        <h2 id="dashboardTitle">[ صياد ] [E]</h2>
+                    </div>
+                    <div class="stat-row"><span>الرتبة</span><strong id="rankValue" style="color: #0ff; font-size:1.3rem;">E</strong></div>
+                    <div class="stat-row"><span>أيام متتالية (Streak)</span><span id="streakValue">0</span></div>
+                    <div class="stat-row"><span>نقاط الخبرة (XP)</span><span><span id="xpValue">0</span> / <span id="nextXpValue">500</span></span></div>
+                    <div class="xp-bar-bg"><div class="xp-fill" id="xpFillBar" style="width:0%"></div></div>
+                    <div class="stat-row"><span>القوة STR</span><span id="strStat">5</span></div>
+                    <div class="stat-row"><span>السرعة AGI</span><span id="agiStat">5</span></div>
+                    <div class="stat-row"><span>التحمل VIT</span><span id="vitStat">5</span></div>
+                    <div class="stat-row"><span>نقاط القدرة</span><span id="statPoints" style="color:#0f0;">0</span></div>
+                    <div class="stat-row"><span>حالة اليوم</span><span id="dailyStatus">غير مكتمل</span></div>
+                    <div class="stat-row"><span>مضاعف العقوبة</span><span id="penaltyMultiplierDisplay">1.00</span></div>
+                </div>
+                <div class="quest-panel">
+                    <h3>[ التمارين ]</h3>
+                    <div id="dailySummary"></div>
+                    <p style="color:#ffaa77; margin-top:12px;">تحذير: الفشل في إكمال جميع التمارين قبل منتصف الليل يفعّل عقوبة مضاعفة الأهداف بنسبة 50% لليوم التالي.</p>
+                </div>
+                <div class="quest-panel" id="emergencyQuestPanel" style="border-color:#ff5500;">
+                    <h3>[ مهمة طارئة ]</h3>
+                    <div id="emergencyContent">لا توجد مهمة طارئة حالياً.</div>
+                </div>
+            </div>
+
+            <div id="quests-page" class="page">
+                <div class="stat-panel">
+                    <h2>[ التمارين الإلزامية ]</h2>
+                    <div class="exercise-grid" id="exerciseGrid"></div>
+                </div>
+            </div>
+
+            <div id="stats-page" class="page">
+                <div class="stat-panel">
+                    <h2>[ توزيع نقاط القدرة ]</h2>
+                    <div class="attribute-card">
+                        <div class="attr">STR<span id="statStr">5</span><button class="btn-system incStat" data-stat="str">+</button></div>
+                        <div class="attr">AGI<span id="statAgi">5</span><button class="btn-system incStat" data-stat="agi">+</button></div>
+                        <div class="attr">VIT<span id="statVit">5</span><button class="btn-system incStat" data-stat="vit">+</button></div>
+                    </div>
+                    <div class="stat-desc-box">
+                        <p style="color:cyan;">[ تأثير القدرات ]</p>
+                        <p><strong style="color:#0ff;">STR (القوة):</strong> كل نقطة فوق 5 تزيد XP من الضغط والقرفصاء.</p>
+                        <p><strong style="color:#0ff;">AGI (السرعة):</strong> كل نقطة فوق 5 تزيد إجمالي XP المكتسب بنسبة 1%.</p>
+                        <p><strong style="color:#0ff;">VIT (التحمل):</strong> كل نقطة فوق 5 تزيد XP من تمارين التحمل (بلانك، سحب لأعلى).</p>
+                    </div>
+                    <div class="stat-row"><span>نقاط متاحة</span><span id="availablePointsDisplay" style="color:#0f0;">0</span></div>
+                </div>
+            </div>
+
+            <div id="records-page" class="page">
+                <div class="stat-panel">
+                    <h3>[ سجل العقوبات ]</h3>
+                    <div id="penaltyList"></div>
+                    <button id="resetGameBtn" class="btn-system danger-btn" style="margin-top:16px;">إعادة تعيين النظام بالكامل</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ------------------- البيانات الأساسية -------------------
+        let player = {
+            name: "صياد",
+            xp: 0,
+            streak: 0,
+            rank: "E",
+            str: 5,
+            agi: 5,
+            vit: 5,
+            statPoints: 0,
+            completedDays: {},
+            penaltyLogs: [],
+            lastDate: new Date().toISOString().slice(0, 10),
+            penaltyMultiplier: 1.0,
+            emergencyQuest: null,
+            monthRewardGiven: false,
+            dailyProgress: { pushups: 0, situps: 0, squats: 0, plank: 0, pullups: 0 }
+        };
+
+        const RANKS = ["E", "D", "C", "B", "A", "S"];
+        const RANK_STREAK_THRESHOLDS = { E: 0, D: 14, C: 35, B: 56, A: 77, S: 98 };
+        const EX_DATA = {
+            pushups: { en: "PUSH-UPS", ar: "ضغط", unit: "reps", base: 100 },
+            situps: { en: "SIT-UPS", ar: "معدة", unit: "reps", base: 100 },
+            squats: { en: "SQUATS", ar: "قرفصاء", unit: "reps", base: 100 },
+            plank: { en: "PLANK", ar: "بلانك", unit: "sec", base: 300 },
+            pullups: { en: "PULL-UPS", ar: "سحب لأعلى (ثابت)", unit: "reps", base: 20 }
+        };
+        const EXERCISE_IDS = ["pushups", "situps", "squats", "plank", "pullups"];
+
+        function getRankDifficultyMultiplier() {
+            let idx = RANKS.indexOf(player.rank);
+            return 1 + (idx * 0.3);
+        }
+
+        function getCurrentTargets() {
+            let rankMult = getRankDifficultyMultiplier();
+            let penaltyMult = player.penaltyMultiplier;
+            let targets = {};
+            for (let id of EXERCISE_IDS) {
+                targets[id] = Math.max(1, Math.floor(EX_DATA[id].base * rankMult * penaltyMult));
+            }
+            return targets;
+        }
+
+        function getXpBonusMultiplier(exerciseId) {
+            let bonus = 1 + (player.agi > 5 ? (player.agi - 5) * 0.01 : 0);
+            if ((exerciseId === "pushups" || exerciseId === "squats") && player.str > 5)
+                bonus += (player.str - 5) * 0.005;
+            if ((exerciseId === "plank" || exerciseId === "pullups") && player.vit > 5)
+                bonus += (player.vit - 5) * 0.005;
+            return Math.min(2.5, bonus);
+        }
+
+        function updateRankByStreak() {
+            let newRank = "E";
+            for (let i = RANKS.length - 1; i >= 0; i--) {
+                if (player.streak >= RANK_STREAK_THRESHOLDS[RANKS[i]]) {
+                    newRank = RANKS[i];
+                    break;
+                }
+            }
+            if (newRank !== player.rank) {
+                let oldIdx = RANKS.indexOf(player.rank);
+                let newIdx = RANKS.indexOf(newRank);
+                player.rank = newRank;
+                if (newIdx > oldIdx) {
+                    let rewardPoints = newIdx * 5;
+                    player.statPoints += rewardPoints;
+                    playSound("rankup");
+                    showSystemMessage(`رتبتك ارتفعت! الآن ${player.rank}. حصلت على +${rewardPoints} نقاط قدرة.`, "cyan");
+                } else {
+                    playSound("penalty");
+                    showSystemMessage(`انخفضت رتبتك إلى ${player.rank}.`, "#f55");
+                }
+                saveData();
+            }
+            applySThemeAndTitle();
+        }
+
+        function applySThemeAndTitle() {
+            const isS = (player.rank === 'S');
+            if (isS) document.body.classList.add('s-rank-theme');
+            else document.body.classList.remove('s-rank-theme');
+            const titleEl = document.getElementById("dashboardTitle");
+            if (titleEl) {
+                titleEl.innerHTML = `<span style="color: inherit;">[ </span><span class="player-title-highlight">${player.name}</span><span style="color: inherit;"> ] [</span><span class="player-title-highlight">${player.rank}</span><span style="color: inherit;"> ]</span>`;
+            }
+            document.getElementById("rankValue").innerText = player.rank;
+        }
+
+        function saveData() {
+            try { localStorage.setItem('solo-leveling-ar', JSON.stringify(player)); } catch (e) { }
+            let inp = document.getElementById("playerNameInput");
+            if (inp && inp.value !== player.name) {
+                player.name = inp.value || "صياد";
+                saveData();
+            }
+            applySThemeAndTitle();
+        }
+
+        function loadData() {
+            try {
+                let raw = localStorage.getItem('solo-leveling-ar');
+                if (raw) {
+                    let saved = JSON.parse(raw);
+                    player = Object.assign({}, player, saved);
+                    if (!player.dailyProgress?.pullups)
+                        player.dailyProgress = { pushups: 0, situps: 0, squats: 0, plank: 0, pullups: 0 };
+                    player.completedDays = saved.completedDays || {};
+                    player.penaltyLogs = saved.penaltyLogs || [];
+                }
+            } catch (e) { }
+            document.getElementById("playerNameInput").value = player.name;
+            applySThemeAndTitle();
+        }
+
+        function checkDateChange() {
+            let today = new Date().toISOString().slice(0, 10);
+            if (player.lastDate !== today) {
+                let yesterdayCompleted = player.completedDays[player.lastDate] === true;
+                if (!yesterdayCompleted) {
+                    player.penaltyMultiplier = 1.5;
+                    player.penaltyLogs.unshift({
+                        date: new Date().toLocaleString(),
+                        reason: "فشل في إكمال التمارين",
+                        penalty: "تم تفعيل مضاعف الأهداف ×1.5 لليوم الحالي"
+                    });
+                    if (player.penaltyLogs.length > 15) player.penaltyLogs.pop();
+                    showSystemMessage(`عقوبة: فشلت في إكمال التمارين أمس. اليوم جميع الأهداف مضاعفة ×1.5.`, "#f55");
+                    playSound("penalty");
+                    player.streak = 0;
+                    updateRankByStreak();
+                } else {
+                    if (player.penaltyMultiplier > 1.0) {
+                        player.penaltyMultiplier = 1.0;
+                        showSystemMessage(`تم إلغاء العقوبة لأنك أكملت التمارين أمس.`, "#0f0");
+                    }
+                }
+                player.dailyProgress = { pushups: 0, situps: 0, squats: 0, plank: 0, pullups: 0 };
+                player.lastDate = today;
+                saveData();
+            }
+            checkCompletionAndReward();
+        }
+
+        function checkCompletionAndReward() {
+            let targets = getCurrentTargets();
+            let allDone = EXERCISE_IDS.every(id => (player.dailyProgress[id] || 0) >= targets[id]);
+            let today = player.lastDate;
+            if (allDone && !player.completedDays[today]) {
+                player.completedDays[today] = true;
+                let xpBonus = 1 + (player.agi > 5 ? (player.agi - 5) * 0.01 : 0);
+                let earned = Math.floor(100 * xpBonus);
+                player.xp += earned;
+                player.streak++;
+                player.statPoints += 3;
+                if (player.penaltyMultiplier > 1.0) player.penaltyMultiplier = 1.0;
+                updateRankByStreak();
+                showSystemMessage(`التمارين مكتملة! +${earned} XP، +3 نقاط قدرة. السلسلة: ${player.streak} يوم`, "#0f0");
+                playSound("complete");
+                if (player.streak >= 30 && !player.monthRewardGiven) {
+                    showMonthReward();
+                    player.monthRewardGiven = true;
+                }
+                saveData();
+                renderEverything();
+            } else if (!allDone && player.completedDays[today]) {
+                player.completedDays[today] = false;
+                saveData();
+            }
+        }
+
+        function updateExercise(id, increment) {
+            let targets = getCurrentTargets();
+            let newVal = (player.dailyProgress[id] || 0) + increment;
+            newVal = Math.max(0, Math.min(targets[id], newVal));
+            player.dailyProgress[id] = newVal;
+            saveData();
+            checkCompletionAndReward();
+            renderEverything();
+        }
+
+        // المهمات الطارئة بالعربية فقط
+        function maybeGenerateEmergencyQuest() {
+            if (Math.random() < 0.20 && !player.emergencyQuest && player.penaltyMultiplier <= 1.0) {
+                const questsList = [
+                    { desc: "بيربي × 20", target: 20, rewardXP: 80 },
+                    { desc: "سحب لأعلى إضافي × 10", target: 10, rewardXP: 60 },
+                    { desc: "ضغط إضافي × 30", target: 30, rewardXP: 70 }
+                ];
+                let q = questsList[Math.floor(Math.random() * 3)];
+                player.emergencyQuest = { desc: q.desc, target: q.target, current: 0, rewardXP: q.rewardXP };
+                showSystemMessage(`مهمة طارئة: ${q.desc} — المكافأة: ${q.rewardXP} XP`, "#ffaa00");
+                saveData();
+                renderEverything();
+            }
+        }
+
+        function progressEmergencyQuest() {
+            if (!player.emergencyQuest) return;
+            player.emergencyQuest.current++;
+            if (player.emergencyQuest.current >= player.emergencyQuest.target) {
+                let bonus = Math.floor(player.emergencyQuest.rewardXP * (1 + (player.agi > 5 ? (player.agi - 5) * 0.01 : 0)));
+                player.xp += bonus;
+                showSystemMessage(`المهمة الطارئة مكتملة! +${bonus} XP`, "#0f0");
+                player.emergencyQuest = null;
+                updateRankByStreak();
+                playSound("complete");
+            } else {
+                showSystemMessage(`تقدم المهمة: ${player.emergencyQuest.desc} (${player.emergencyQuest.current}/${player.emergencyQuest.target})`, "cyan");
+            }
+            saveData();
+            renderEverything();
+        }
+
+        function playSound(type) {
+            try {
+                let ctx = new (window.AudioContext || window.webkitAudioContext)();
+                let osc = ctx.createOscillator();
+                let gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                if (type === "complete") {
+                    osc.frequency.value = 880;
+                    gain.gain.value = 0.2;
+                    osc.start();
+                    gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
+                    osc.stop(ctx.currentTime + 0.4);
+                } else if (type === "penalty") {
+                    osc.frequency.value = 220;
+                    gain.gain.value = 0.3;
+                    osc.start();
+                    gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.8);
+                    osc.stop(ctx.currentTime + 0.7);
+                } else if (type === "rankup") {
+                    osc.frequency.value = 1200;
+                    gain.gain.value = 0.15;
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.2);
+                }
+                setTimeout(() => ctx.close(), 1000);
+            } catch (e) { }
+        }
+
+        function showSystemMessage(msg, color = "#0ff") {
+            let modal = document.createElement("div");
+            modal.className = "system-modal";
+            modal.innerHTML = `<div class="modal-system-box"><h3 class="glitch-text">[ رسالة النظام ]</h3><p style="color:${color};">${msg}</p><button class="btn-system" id="closeSysMsg">تأكيد</button></div>`;
+            document.body.appendChild(modal);
+            document.getElementById("closeSysMsg").onclick = () => modal.remove();
+            setTimeout(() => { if (modal && modal.parentNode) modal.remove(); }, 5000);
+        }
+
+        function showMonthReward() {
+            let modalDiv = document.createElement("div");
+            modalDiv.className = "system-modal";
+            modalDiv.innerHTML = `<div class="modal-system-box"><h3 class="glitch-text">[ مكافأة 30 يوماً متتالياً ]</h3><p>اختر مكافأتك:</p><button class="btn-system" id="rewardXp">+1500 XP</button><button class="btn-system" id="rewardStat">+10 نقاط قدرة</button></div>`;
+            document.body.appendChild(modalDiv);
+            document.getElementById("rewardXp").onclick = () => {
+                player.xp += 1500;
+                modalDiv.remove();
+                showSystemMessage("تم منح +1500 XP.");
+                saveData();
+                renderEverything();
+            };
+            document.getElementById("rewardStat").onclick = () => {
+                player.statPoints += 10;
+                modalDiv.remove();
+                showSystemMessage("تم منح +10 نقاط قدرة.");
+                saveData();
+                renderEverything();
+            };
+        }
+
+        function renderExercises() {
+            let container = document.getElementById("exerciseGrid");
+            if (!container) return;
+            let targets = getCurrentTargets();
+            container.innerHTML = EXERCISE_IDS.map(id => {
+                let cur = player.dailyProgress[id] || 0;
+                let percent = Math.min(100, (cur / targets[id]) * 100);
+                return `<div class="exercise-tile">
+                    <div class="ex-name">
+                        <div class="ex-name-en">${EX_DATA[id].en}</div>
+                        <div class="ex-name-ar">${EX_DATA[id].ar}</div>
+                    </div>
+                    <div>[ ${cur} / ${targets[id]} ${EX_DATA[id].unit} ]</div>
+                    <div class="xp-bar-bg"><div class="xp-fill" style="width:${percent}%"></div></div>
+                    <div class="flex-buttons">
+                        <button class="btn-system ex-decr" data-id="${id}">-10</button>
+                        <button class="btn-system ex-incr" data-id="${id}">+10</button>
+                    </div>
+                </div>`;
+            }).join("");
+            document.querySelectorAll(".ex-decr").forEach(btn => btn.addEventListener("click", () => updateExercise(btn.dataset.id, -10)));
+            document.querySelectorAll(".ex-incr").forEach(btn => btn.addEventListener("click", () => updateExercise(btn.dataset.id, 10)));
+        }
+
+        function renderEverything() {
+            let inp = document.getElementById("playerNameInput");
+            if (inp && inp.value !== player.name) {
+                player.name = inp.value || "صياد";
+                saveData();
+            }
+
+            document.getElementById("rankValue").innerText = player.rank;
+            document.getElementById("streakValue").innerText = player.streak;
+            document.getElementById("xpValue").innerText = player.xp;
+            let next = RANK_STREAK_THRESHOLDS[RANKS[RANKS.indexOf(player.rank) + 1]];
+            if (next) {
+                document.getElementById("nextXpValue").innerHTML = next + " يوم";
+                let percent = Math.min(100, (player.streak / next) * 100);
+                document.getElementById("xpFillBar").style.width = percent + "%";
+            } else {
+                document.getElementById("nextXpValue").innerHTML = "MAX";
+                document.getElementById("xpFillBar").style.width = "100%";
+            }
+            document.getElementById("strStat").innerText = player.str;
+            document.getElementById("agiStat").innerText = player.agi;
+            document.getElementById("vitStat").innerText = player.vit;
+            document.getElementById("statPoints").innerText = player.statPoints;
+            document.getElementById("availablePointsDisplay").innerText = player.statPoints;
+            document.getElementById("statStr").innerText = player.str;
+            document.getElementById("statAgi").innerText = player.agi;
+            document.getElementById("statVit").innerText = player.vit;
+            document.getElementById("penaltyMultiplierDisplay").innerText = player.penaltyMultiplier.toFixed(2);
+
+            let targets = getCurrentTargets();
+            let allDone = EXERCISE_IDS.every(id => (player.dailyProgress[id] || 0) >= targets[id]);
+            document.getElementById("dailyStatus").innerHTML = allDone ? "مكتمل" : "غير مكتمل";
+            document.getElementById("dailyStatus").style.color = allDone ? "#0f0" : "#ff5500";
+
+            let summaryHtml = EXERCISE_IDS.map(id => `<div class="stat-row"><span>${EX_DATA[id].en}<br><span style="font-size:0.7rem;">${EX_DATA[id].ar}</span></span><span>${player.dailyProgress[id] || 0} / ${targets[id]}</span></div>`).join("");
+            document.getElementById("dailySummary").innerHTML = summaryHtml;
+            renderExercises();
+
+            let pList = document.getElementById("penaltyList");
+            if (pList) {
+                pList.innerHTML = player.penaltyLogs.length
+                    ? player.penaltyLogs.map(l => `<div style="border-right:3px solid #f55; margin:6px 0; padding:5px 10px;">${l.date} — ${l.reason}<br><span style="color:#f88;">${l.penalty}</span></div>`).join("")
+                    : "<p>لا توجد عقوبات مسجلة.</p>";
+            }
+
+            let banner = document.getElementById("penaltyBanner");
+            if (banner) banner.classList.toggle("show", player.penaltyMultiplier > 1.0);
+
+            let emergDiv = document.getElementById("emergencyContent");
+            if (emergDiv) {
+                if (player.emergencyQuest) {
+                    emergDiv.innerHTML = `
+                        <div class="emergency-box">
+                            <div class="emergency-text">${player.emergencyQuest.desc}</div>
+                            <div class="stat-row">التقدم: ${player.emergencyQuest.current} / ${player.emergencyQuest.target}</div>
+                            <button class="btn-system" id="doEmerg">تقدم +1</button>
+                        </div>`;
+                    let btn = document.getElementById("doEmerg");
+                    if (btn) btn.onclick = () => progressEmergencyQuest();
+                } else {
+                    emergDiv.innerText = "لا توجد مهمة طارئة حالياً.";
+                }
+            }
+            applySThemeAndTitle();
+        }
+
+        function init() {
+            loadData();
+            checkDateChange();
+            maybeGenerateEmergencyQuest();
+            renderEverything();
+
+            document.querySelectorAll(".sys-nav-item[data-page]").forEach(nav => {
+                nav.addEventListener("click", () => {
+                    let pageId = nav.dataset.page + "-page";
+                    document.querySelectorAll(".page").forEach(p => p.classList.remove("active-page"));
+                    document.getElementById(pageId).classList.add("active-page");
+                    document.querySelectorAll(".sys-nav-item").forEach(n => n.classList.remove("active"));
+                    nav.classList.add("active");
+                });
+            });
+
+            document.getElementById("resetGameBtn")?.addEventListener("click", () => {
+                if (confirm("تحذير: سيتم مسح كل التقدم نهائياً. هل أنت متأكد؟")) {
+                    localStorage.removeItem('solo-leveling-ar');
+                    location.reload();
+                }
+            });
+
+            document.querySelectorAll(".incStat").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    let stat = btn.dataset.stat;
+                    if (player.statPoints > 0) {
+                        player[stat]++;
+                        player.statPoints--;
+                        saveData();
+                        renderEverything();
+                        playSound("complete");
+                    } else {
+                        showSystemMessage("لا توجد نقاط قدرة متاحة.", "#f55");
+                    }
+                });
+            });
+
+            let nameInput = document.getElementById("playerNameInput");
+            if (nameInput) {
+                nameInput.addEventListener("change", () => {
+                    player.name = nameInput.value.trim() || "صياد";
+                    saveData();
+                    renderEverything();
+                });
+            }
+
+            setInterval(() => {
+                checkDateChange();
+                maybeGenerateEmergencyQuest();
+                renderEverything();
+            }, 60000);
+        }
+
+        window.addEventListener("load", init);
+    </script>
+</body>
+</html>

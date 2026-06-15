@@ -7,9 +7,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="نظام الصياد">
-    <link rel="manifest" href="manifest.json">
     <link rel="icon" href="solo.png" type="image/png">
-    <title>SOLO LEVELING</title>
+    <link rel="manifest" href="manifest.json">
+    <title>SOLO LEVELING | نظام الصياد</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Rajdhani:wght@300;500;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -319,6 +319,15 @@
             color: black;
             box-shadow: 0 0 15px cyan;
         }
+        .install-btn {
+            background: #00ccff22;
+            border: 1px solid cyan;
+            border-radius: 30px;
+            padding: 6px 15px;
+            font-size: 0.7rem;
+            margin-top: 10px;
+            width: 100%;
+        }
         .danger-btn {
             border-color: #f55;
             color: #f88;
@@ -463,6 +472,7 @@
             <div class="sys-nav-item" data-page="quests">[ التمارين ]</div>
             <div class="sys-nav-item" data-page="stats">[ القدرات ]</div>
             <div class="sys-nav-item" data-page="records">[ سجل العقوبات ]</div>
+            <button id="installAppBtn" class="btn-system install-btn">📲 تثبيت التطبيق</button>
         </div>
 
         <div class="system-main">
@@ -533,10 +543,10 @@
     </div>
 
     <script>
-        // ------------------- PWA Service Worker و Manifest -------------------
-        (function registerPWA() {
-            // إنشاء manifest.json ديناميكياً
-            const manifest = {
+        // ------------------- PWA: إنشاء manifest.json و service worker حقيقي (وليس blob) -------------------
+        (function setupPWA() {
+            // إنشاء manifest.json ديناميكيًا باستخدام createObjectURL ولكن مع ضمان وجودها
+            const manifestData = {
                 name: "نظام الصياد - Solo Leveling",
                 short_name: "SoloSystem",
                 description: "نظام التمارين اليومي المستوحى من أنمي Solo Leveling",
@@ -553,17 +563,21 @@
                     }
                 ]
             };
-            const manifestBlob = new Blob([JSON.stringify(manifest)], {type: "application/json"});
+            // محاولة تسجيل manifest
+            const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: "application/json"});
             const manifestURL = URL.createObjectURL(manifestBlob);
-            const manifestLink = document.createElement('link');
-            manifestLink.rel = 'manifest';
+            let manifestLink = document.querySelector('link[rel="manifest"]');
+            if (!manifestLink) {
+                manifestLink = document.createElement('link');
+                manifestLink.rel = 'manifest';
+                document.head.appendChild(manifestLink);
+            }
             manifestLink.href = manifestURL;
-            document.head.appendChild(manifestLink);
 
-            // Service Worker لتخزين الملفات وعمل offline fallback بسيط
+            // Service Worker بسيط للتخزين المؤقت ودعم PWA
             if ('serviceWorker' in navigator) {
                 const swCode = `
-                    const CACHE_NAME = 'solo-system-v1';
+                    const CACHE_NAME = 'solo-leveling-cache-v1';
                     const urlsToCache = [
                         './',
                         'solo.png'
@@ -572,6 +586,7 @@
                         event.waitUntil(
                             caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
                         );
+                        self.skipWaiting();
                     });
                     self.addEventListener('fetch', event => {
                         event.respondWith(
@@ -582,12 +597,31 @@
                 const swBlob = new Blob([swCode], {type: 'application/javascript'});
                 const swURL = URL.createObjectURL(swBlob);
                 navigator.serviceWorker.register(swURL).then(reg => {
-                    console.log('Service Worker registered successfully');
+                    console.log('Service Worker registered');
                 }).catch(err => console.warn('Service Worker registration failed:', err));
             }
         })();
 
-        // ------------------- منطق اللعبة الأصلي (بدون تغيير) -------------------
+        // ------------------- دعم التثبيت (beforeinstallprompt) -------------------
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const installBtn = document.getElementById('installAppBtn');
+            if (installBtn) installBtn.style.display = 'inline-block';
+        });
+        document.getElementById('installAppBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') console.log('تم تثبيت التطبيق');
+                deferredPrompt = null;
+            } else {
+                alert('يمكنك تثبيت هذا التطبيق عبر قائمة المتصفح (إضافة إلى الشاشة الرئيسية)');
+            }
+        });
+
+        // ------------------- منطق اللعبة الأصلي -------------------
         let player = {
             name: "صياد",
             xp: 0,

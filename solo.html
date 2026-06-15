@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>SOLO LEVELING </title>
+    <meta name="theme-color" content="#0a0018">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="نظام الصياد">
+    <link rel="manifest" href="manifest.json">
     <link rel="icon" href="solo.png" type="image/png">
+    <title>SOLO LEVELING</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Rajdhani:wght@300;500;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -528,7 +533,61 @@
     </div>
 
     <script>
-        // ------------------- البيانات الأساسية -------------------
+        // ------------------- PWA Service Worker و Manifest -------------------
+        (function registerPWA() {
+            // إنشاء manifest.json ديناميكياً
+            const manifest = {
+                name: "نظام الصياد - Solo Leveling",
+                short_name: "SoloSystem",
+                description: "نظام التمارين اليومي المستوحى من أنمي Solo Leveling",
+                start_url: ".",
+                display: "standalone",
+                theme_color: "#0a0018",
+                background_color: "#03050b",
+                icons: [
+                    {
+                        src: "solo.png",
+                        sizes: "512x512",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    }
+                ]
+            };
+            const manifestBlob = new Blob([JSON.stringify(manifest)], {type: "application/json"});
+            const manifestURL = URL.createObjectURL(manifestBlob);
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = manifestURL;
+            document.head.appendChild(manifestLink);
+
+            // Service Worker لتخزين الملفات وعمل offline fallback بسيط
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    const CACHE_NAME = 'solo-system-v1';
+                    const urlsToCache = [
+                        './',
+                        'solo.png'
+                    ];
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+                        );
+                    });
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request).then(response => response || fetch(event.request))
+                        );
+                    });
+                `;
+                const swBlob = new Blob([swCode], {type: 'application/javascript'});
+                const swURL = URL.createObjectURL(swBlob);
+                navigator.serviceWorker.register(swURL).then(reg => {
+                    console.log('Service Worker registered successfully');
+                }).catch(err => console.warn('Service Worker registration failed:', err));
+            }
+        })();
+
+        // ------------------- منطق اللعبة الأصلي (بدون تغيير) -------------------
         let player = {
             name: "صياد",
             xp: 0,
@@ -711,7 +770,6 @@
             renderEverything();
         }
 
-        // المهمات الطارئة بالعربية فقط
         function maybeGenerateEmergencyQuest() {
             if (Math.random() < 0.20 && !player.emergencyQuest && player.penaltyMultiplier <= 1.0) {
                 const questsList = [

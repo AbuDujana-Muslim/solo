@@ -492,7 +492,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            font-size: clamp(0.5rem, 4vw, 1.2rem);
+            font-size: clamp(0.8rem, 4vw, 1.8rem);
             padding: 0.5rem;
             box-sizing: border-box;
             word-break: keep-all;
@@ -640,7 +640,7 @@
             .profile-avatar {
                 width: 80px;
                 height: 80px;
-                font-size: clamp(0.4rem, 3.5vw, 1rem);
+                font-size: clamp(0.6rem, 3.5vw, 1.4rem);
             }
         }
         .ex-check:disabled {
@@ -669,7 +669,26 @@
         body.s-rank-theme .exercise-grid .exercise-tile.core-exercise {
             border-right-color: #d6aaff;
         }
-        /* تحسين زر الإكمال للمهام الطارئة */
+        /* زر الإكمال للتمارين */
+        .complete-btn {
+            border-color: #0f0;
+            color: #0f0;
+        }
+        .complete-btn:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 15px #0f0;
+        }
+        body.s-rank-theme .complete-btn {
+            border-color: #d6aaff;
+            color: #d6aaff;
+        }
+        body.s-rank-theme .complete-btn:hover {
+            background: #d6aaff;
+            color: #1a002a;
+            box-shadow: 0 0 15px #d6aaff;
+        }
+        /* زر اكتمل للمهام الطارئة */
         .quest-complete-btn {
             border-color: #ffaa00;
             color: #ffaa00;
@@ -956,6 +975,22 @@
             return Math.min(2.5, bonus);
         }
 
+        // ------------------- Fullscreen API مع البادئات -------------------
+        function requestFullscreen() {
+            const el = document.documentElement;
+            if (el.requestFullscreen) return el.requestFullscreen();
+            if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+            if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
+            return Promise.reject('Fullscreen not supported');
+        }
+
+        function exitFullscreen() {
+            if (document.exitFullscreen) return document.exitFullscreen();
+            if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+            if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
+            return Promise.reject('Fullscreen not supported');
+        }
+
         // ------------------- حفظ و تحميل البيانات -------------------
         function saveData() {
             try {
@@ -1071,23 +1106,17 @@
             const usedExercises = [];
 
             // توليد وقتين عشوائيين خلال اليوم مع تباعد 4-6 ساعات
-            // اليوم يبدأ من الساعة 6 صباحاً حتى 10 مساءً (16 ساعة)
             const startHour = 6;
             const endHour = 22;
             const totalMinutes = (endHour - startHour) * 60;
-            // توليد وقتين عشوائيين بفاصل 4-6 ساعات (240-360 دقيقة)
             const minGap = 240; // 4 ساعات
             const maxGap = 360; // 6 ساعات
-            // نختار وقت البداية عشوائياً في النصف الأول من اليوم
             const firstStartMin = Math.floor(Math.random() * (totalMinutes - minGap));
-            // نختار الفاصل عشوائياً بين minGap و maxGap
             const gap = minGap + Math.floor(Math.random() * (maxGap - minGap + 1));
             const secondStartMin = firstStartMin + gap;
-            // التأكد من أن الثاني لا يتجاوز نهاية اليوم
-            const maxStart = totalMinutes - 10; // نترك 10 دقائق هامش
+            const maxStart = totalMinutes - 10;
             const firstTime = Math.min(firstStartMin, maxStart);
-            const secondTime = Math.min(secondStartMin, maxStart + 10); // إذا تجاوز نضعه في نهاية اليوم
-            // تحويل الدقائق إلى تاريخ اليوم
+            const secondTime = Math.min(secondStartMin, maxStart + 10);
             const now = new Date();
             const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const firstDate = new Date(todayDate.getTime() + (startHour * 60 + firstTime) * 60000);
@@ -1109,8 +1138,6 @@
             player.emergencyQuests = quests;
             player.emergencyQuestDate = today;
             saveData();
-            // نعرض إشعارات بأن المهام ستظهر لاحقاً (اختياري)
-            // لكننا سنعرض فقط عند التفعيل
         }
 
         function createQuest(exId) {
@@ -1133,7 +1160,7 @@
                 target: extraReps,
                 current: 0,
                 rewardXP: Math.floor(rewardXP),
-                triggerTime: 0, // سيتم تعيينه لاحقاً
+                triggerTime: 0,
                 expiryTime: 0,
                 triggered: false,
                 completed: false,
@@ -1148,16 +1175,13 @@
             player.emergencyQuests.forEach(q => {
                 if (q.completed || q.expired) return;
                 if (!q.triggered && q.triggerTime <= now) {
-                    // تفعيل المهمة
                     q.triggered = true;
                     q.expiryTime = now + EMERGENCY_QUEST_DURATION;
                     updated = true;
-                    // عرض إشعار
                     showSystemMessage(`مهمة طارئة: ${q.desc} — المكافأة: ${q.rewardXP} XP`, "#ffaa00");
                     sendWebNotification('مهمة طارئة!', q.desc + ' | مكافأة: ' + q.rewardXP + ' XP');
                     // جدولة انتهاء الصلاحية
                     setTimeout(() => {
-                        // نتحقق من أن المهمة لم تكتمل ولم تنتهِ صلاحيتها
                         const quest = player.emergencyQuests.find(qq => qq === q);
                         if (quest && !quest.completed && !quest.expired) {
                             quest.expired = true;
@@ -1171,10 +1195,6 @@
                     q.expired = true;
                     updated = true;
                 }
-                // إذا وصل التقدم إلى الهدف ولم تكتمل، نكملها تلقائياً (اختياري)
-                if (q.triggered && !q.completed && !q.expired && q.current >= q.target) {
-                    // يمكن إكمالها تلقائياً، لكننا نفضل ترك الزر للمستخدم
-                }
             });
             if (updated) {
                 saveData();
@@ -1182,7 +1202,7 @@
             }
         }
 
-        // دالة لإكمال مهمة طارئة (زر الإكمال)
+        // دالة لإكمال مهمة طارئة (زر اكتمل فقط)
         function completeEmergencyQuest(index) {
             const q = player.emergencyQuests[index];
             if (!q || q.completed || q.expired || !q.triggered) return;
@@ -1193,7 +1213,6 @@
                 showSystemMessage('انتهت مهلة المهمة.', '#f55');
                 return;
             }
-            // منح XP
             let bonus = Math.floor(q.rewardXP * (1 + (player.agi > 5 ? (player.agi-5)*0.01 : 0)));
             player.xp += bonus;
             q.completed = true;
@@ -1259,6 +1278,17 @@
             saveData();
             checkCompletionAndReward();
             renderEverything();
+        }
+
+        // دالة "اكتمل" للتمرين: يضبط التقدم إلى الهدف مباشرة
+        function completeExercise(id) {
+            let targets = getCurrentTargets();
+            if (targets[id] === undefined) return;
+            player.dailyProgress[id] = targets[id];
+            saveData();
+            checkCompletionAndReward();
+            renderEverything();
+            playSound("complete");
         }
 
         // ------------------- الإشعارات -------------------
@@ -1378,9 +1408,8 @@
             workoutExerciseQueue = queue;
             workoutIndex = 0;
 
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(() => {});
-            }
+            // طلب ملء الشاشة مع البادئات
+            requestFullscreen().catch(() => {});
 
             workoutActive = true;
             showWorkoutExercise();
@@ -1446,9 +1475,8 @@
             workoutActive = false;
             const overlay = document.getElementById('workoutOverlay');
             if (overlay) overlay.remove();
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(() => {});
-            }
+            // الخروج من ملء الشاشة مع البادئات
+            exitFullscreen().catch(() => {});
             renderEverything();
         }
 
@@ -1488,6 +1516,7 @@
                         <span style="color:#ffaa00;font-size:0.8rem;">[ إجباري ]</span>
                         <button class="btn-system ex-decr" data-id="${id}">-5</button>
                         <button class="btn-system ex-incr" data-id="${id}">+5</button>
+                        <button class="btn-system complete-btn" data-id="${id}">اكتمل</button>
                         <button class="btn-system ex-detail-btn" data-id="${id}">تفاصيل</button>
                     </div>
                 `;
@@ -1515,6 +1544,7 @@
                     <div class="ex-actions">
                         <button class="btn-system ex-decr" data-id="${id}">-5</button>
                         <button class="btn-system ex-incr" data-id="${id}">+5</button>
+                        <button class="btn-system complete-btn" data-id="${id}">اكتمل</button>
                         <button class="btn-system ex-detail-btn" data-id="${id}">تفاصيل</button>
                     </div>
                 `;
@@ -1529,6 +1559,9 @@
             });
             container.querySelectorAll('.ex-incr').forEach(btn => {
                 btn.addEventListener('click', () => updateExercise(btn.dataset.id, 5));
+            });
+            container.querySelectorAll('.complete-btn').forEach(btn => {
+                btn.addEventListener('click', () => completeExercise(btn.dataset.id));
             });
             container.querySelectorAll('.ex-detail-btn').forEach(btn => {
                 btn.addEventListener('click', () => showExerciseDetail(btn.dataset.id));
@@ -1601,11 +1634,11 @@
             if (avatar) {
                 let displayName = player.name.trim() || 'صياد';
                 avatar.textContent = displayName;
-                // ضبط حجم الخط تلقائياً حسب طول الاسم
+                // ضبط حجم الخط تلقائياً حسب طول الاسم باستخدام clamp
                 const len = displayName.length;
-                if (len <= 2) avatar.style.fontSize = 'clamp(1rem, 5vw, 2rem)';
-                else if (len <= 4) avatar.style.fontSize = 'clamp(0.8rem, 3.5vw, 1.5rem)';
-                else avatar.style.fontSize = 'clamp(0.6rem, 2.5vw, 1rem)';
+                if (len <= 2) avatar.style.fontSize = 'clamp(1.2rem, 5vw, 2.2rem)';
+                else if (len <= 4) avatar.style.fontSize = 'clamp(1rem, 4vw, 1.8rem)';
+                else avatar.style.fontSize = 'clamp(0.7rem, 3vw, 1.2rem)';
             }
             // تحديث باقي الحقول
             const pRank = document.getElementById('profileRank');
@@ -1636,15 +1669,13 @@
         function renderEmergencyQuests() {
             const container = document.getElementById('emergencyContent');
             if (!container) return;
-            // نفلتر المهام التي تم تفعيلها ولم تنتهِ ولم تكتمل
             const activeQuests = player.emergencyQuests.filter(q => q.triggered && !q.completed && !q.expired);
             if (activeQuests.length === 0) {
                 container.innerHTML = '<p>لا توجد مهام طارئة نشطة حالياً.</p>';
                 return;
             }
             let html = '';
-            activeQuests.forEach((q, index) => {
-                // نبحث عن الفهرس الأصلي في المصفوفة
+            activeQuests.forEach((q, idx) => {
                 const originalIndex = player.emergencyQuests.indexOf(q);
                 const remaining = q.expiryTime - Date.now();
                 if (remaining <= 0) {
@@ -1665,34 +1696,11 @@
                         </div>
                         <div class="quest-actions">
                             <button class="btn-system quest-complete-btn" onclick="completeEmergencyQuest(${originalIndex})">اكتمل</button>
-                            <button class="btn-system" onclick="updateEmergencyQuestProgress(${originalIndex}, 1)">+1</button>
-                            <button class="btn-system" onclick="updateEmergencyQuestProgress(${originalIndex}, 5)">+5</button>
                         </div>
                     </div>
                 `;
             });
             container.innerHTML = html;
-        }
-
-        // دالة لتحديث تقدم المهمة الطارئة يدوياً (عبر الأزرار +/-)
-        function updateEmergencyQuestProgress(index, increment) {
-            const q = player.emergencyQuests[index];
-            if (!q || q.completed || q.expired || !q.triggered) return;
-            if (Date.now() > q.expiryTime) {
-                q.expired = true;
-                saveData();
-                renderEverything();
-                showSystemMessage('انتهت مهلة المهمة.', '#f55');
-                return;
-            }
-            q.current = Math.min(q.target, q.current + increment);
-            if (q.current >= q.target) {
-                // إكمال تلقائي (يمكن استخدام زر الإكمال أيضاً)
-                // لكننا نفضل أن يضغط المستخدم زر "اكتمل" للحصول على XP
-                // لذا نكتفي بتحديث العرض
-            }
-            saveData();
-            renderEverything();
         }
 
         // ------------------- عرض كل شيء -------------------
@@ -1809,7 +1817,6 @@
             requestNotificationPermission();
             scheduleDailyReminder();
 
-            // التحقق الدوري من المهام الطارئة (كل 5 ثوان)
             setInterval(() => {
                 checkDateChange();
                 checkEmergencyQuests();

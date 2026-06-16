@@ -104,22 +104,6 @@
         }
         body.s-rank-theme .modal-system-box h3 { color: #d6aaff; }
         body.s-rank-theme .modal-system-box p { color: #e0b3ff; }
-        body.s-rank-theme .workout-overlay {
-            background: rgba(8, 0, 20, 0.95);
-        }
-        body.s-rank-theme .workout-exercise-name {
-            color: #d6aaff;
-            text-shadow: 0 0 30px #b77eff;
-        }
-        body.s-rank-theme .workout-btn {
-            border-color: #b77eff;
-            color: #e0b3ff;
-        }
-        body.s-rank-theme .workout-btn:hover {
-            background: #b77eff;
-            color: #1a002a;
-            box-shadow: 0 0 25px #b77eff;
-        }
 
         .player-title-highlight {
             color: #88ccff;
@@ -474,7 +458,7 @@
             color: #ffaa66;
             margin-bottom: 6px;
         }
-        /* الملف الشخصي - دائرة الأفاتار مع تحسينات */
+        /* الملف الشخصي - دائرة الأفاتار */
         .profile-avatar {
             width: 100px;
             height: 100px;
@@ -514,7 +498,7 @@
         .profile-field span:last-child {
             color: #0ff;
         }
-        /* وضع ملء الشاشة - يستخدم نفس أنماط النظام */
+        /* وضع التدريب */
         .workout-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -707,10 +691,88 @@
             color: #1a002a;
             box-shadow: 0 0 15px #d6aaff;
         }
+
+        /* ===== صفحة المؤقت ===== */
+        .timer-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid #0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            background: rgba(0, 30, 60, 0.4);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            transition: all 0.5s;
+        }
+        body.s-rank-theme .timer-circle {
+            border-color: #b77eff;
+            box-shadow: 0 0 30px rgba(160, 100, 255, 0.4);
+            background: rgba(80, 40, 120, 0.2);
+        }
+        .timer-display {
+            font-family: 'Orbitron', 'Cairo', monospace;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #0ff;
+            text-shadow: 0 0 15px cyan;
+            transition: color 0.5s, text-shadow 0.5s;
+            letter-spacing: 2px;
+        }
+        body.s-rank-theme .timer-display {
+            color: #d6aaff;
+            text-shadow: 0 0 15px #b77eff;
+        }
+        .timer-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .timer-controls .btn-system {
+            min-width: 100px;
+        }
+        .timer-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .timer-input-group label {
+            font-size: 0.9rem;
+            color: #8cf;
+        }
+        .timer-input-group input {
+            background: #02101f;
+            border: 1px solid #0ff;
+            color: #0ff;
+            font-family: 'Rajdhani', 'Cairo', monospace;
+            padding: 8px;
+            width: 100px;
+            text-align: center;
+            font-size: 1rem;
+            border-radius: 4px;
+            transition: border-color 0.5s, color 0.5s, background 0.5s;
+        }
+        body.s-rank-theme .timer-input-group input {
+            border-color: #b77eff;
+            color: #e0b3ff;
+            background: #160025;
+        }
+        .timer-status {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #8cf;
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 <body>
     <div class="cyber-grid"></div>
+
     <div class="container">
         <div class="system-sidebar">
             <div class="system-title">[ SOLO LEVELING ]</div>
@@ -722,6 +784,7 @@
             <div class="sys-nav-item" data-page="quests">[ التمارين ]</div>
             <div class="sys-nav-item" data-page="stats">[ القدرات ]</div>
             <div class="sys-nav-item" data-page="profile">[ الملف الشخصي ]</div>
+            <div class="sys-nav-item" data-page="timer">[ المؤقت ]</div>
             <div class="sys-nav-item" data-page="records">[ سجل العقوبات ]</div>
             <button id="installAppBtn" class="btn-system install-btn">تثبيت التطبيق</button>
         </div>
@@ -764,7 +827,7 @@
                         <h2>[ التمارين الإلزامية ]</h2>
                         <div>
                             <button id="addExercisesBtn" class="btn-system add-exercises-btn">+ إضافة تمارين</button>
-                            <button id="workoutModeBtn" class="btn-system" style="font-size:1rem;">الوضع القتالي</button>
+                            <button id="workoutModeBtn" class="btn-system" style="font-size:1rem;">وضع التدريب</button>
                         </div>
                     </div>
                     <div class="exercise-grid" id="exerciseGrid"></div>
@@ -793,7 +856,6 @@
                 <div class="stat-panel">
                     <h2>[ الملف الشخصي ]</h2>
                     <div class="profile-avatar" id="profileAvatar">صياد</div>
-                    <!-- تم إزالة حقل الاسم النصي -->
                     <div class="profile-field"><span>الرتبة</span><span id="profileRank">E</span></div>
                     <div class="profile-field"><span>الأيام المتتالية</span><span id="profileStreak">0</span></div>
                     <div class="profile-field"><span>نقاط الخبرة</span><span id="profileXp">0</span></div>
@@ -802,6 +864,26 @@
                     <div class="profile-field"><span>AGI</span><span id="profileAgi">5</span></div>
                     <div class="profile-field"><span>VIT</span><span id="profileVit">5</span></div>
                     <div class="profile-field"><span>حالة اليوم</span><span id="profileDailyStatus">غير مكتمل</span></div>
+                </div>
+            </div>
+
+            <!-- ===== صفحة المؤقت ===== -->
+            <div id="timer-page" class="page">
+                <div class="stat-panel">
+                    <h2>[ المؤقت ]</h2>
+                    <div class="timer-circle">
+                        <div class="timer-display" id="timerDisplay">00:00</div>
+                    </div>
+                    <div class="timer-status" id="timerStatus">جاهز</div>
+                    <div class="timer-input-group">
+                        <label for="timerDurationInput">المدة (ثانية)</label>
+                        <input type="number" id="timerDurationInput" value="60" min="5" max="600" step="1">
+                    </div>
+                    <div class="timer-controls">
+                        <button class="btn-system" id="timerStartBtn">تشغيل</button>
+                        <button class="btn-system" id="timerStopBtn">إيقاف</button>
+                        <button class="btn-system" id="timerResetBtn">إعادة تعيين</button>
+                    </div>
                 </div>
             </div>
 
@@ -881,13 +963,11 @@
 
         // ------------------- قائمة التمارين الكاملة (25 تمريناً) -------------------
         const ALL_EXERCISES = [
-            // الأساسية (5) – الأربعة الأولى محمية
             { id: 'pushups', en: 'PUSH-UPS', ar: 'ضغط', muscle: 'الصدر، الكتفين، ثلاثية الرؤوس', description: 'تمرين الضغط الكلاسيكي: اخفض جسمك حتى يلامس صدرك الأرض تقريباً، ثم ادفع للأعلى.', isCore: true },
             { id: 'situps', en: 'SIT-UPS', ar: 'معدة', muscle: 'عضلات البطن المستقيمة والمائلة', description: 'استلقِ على ظهرك مع ثني الركبتين، ارفع الجزء العلوي من جسمك نحو الركبتين.', isCore: true },
             { id: 'squats', en: 'SQUATS', ar: 'قرفصاء', muscle: 'الفخذين، الأرداف، الساقين', description: 'قف مع مباعدة قدميك بعرض الكتفين، انزل للأسفل كأنك تجلس على كرسي، ثم ارفع.', isCore: true },
             { id: 'plank', en: 'PLANK', ar: 'بلانك', muscle: 'الجذع، الكتفين، الأرداف', description: 'اتخذ وضعية الضغط مع ثبات الذراعين، حافظ على استقامة الجسم لأكبر مدة ممكنة.', isCore: true },
             { id: 'pullups', en: 'PULL-UPS', ar: 'سحب لأعلى', muscle: 'الظهر، العضلة ذات الرأسين', description: 'علق على قضيب ثابت واسحب جسمك لأعلى حتى يصل ذقنك إلى مستوى القضيب.', isCore: false },
-            // 20 تمريناً إضافياً
             { id: 'dips', en: 'DIPS', ar: 'غطس', muscle: 'ثلاثية الرؤوس، الصدر، الكتفين', description: 'استخدم متوازيين أو كرسيين، أنزل جسمك لأسفل بين يديك ثم ادفع للأعلى.', isCore: false },
             { id: 'lunges', en: 'LUNGES', ar: 'اندفاع', muscle: 'الفخذين، الأرداف', description: 'تقدّم بقدم واحدة وانزل بالركبة الخلفية نحو الأرض، ثم ادفع للأعلى.', isCore: false },
             { id: 'burpees', en: 'BURPEES', ar: 'بيربي', muscle: 'كامل الجسم', description: 'قف، انزل إلى وضع القرفصاء، اركل قدميك للخلف، قم بضغطة، ثم اقفز للأعلى.', isCore: false },
@@ -920,16 +1000,16 @@
             completedDays: {}, penaltyLogs: [],
             lastDate: new Date().toISOString().slice(0, 10),
             penaltyMultiplier: 1.0,
-            emergencyQuests: [], // مصفوفة من المهام الطارئة
+            emergencyQuests: [],
             monthRewardGiven: false,
             dailyProgress: {},
             selectedExercises: [],
-            emergencyQuestDate: null, // تاريخ اليوم الذي تولدت فيه المهام
+            emergencyQuestDate: null,
         };
 
         const RANKS = ["E","D","C","B","A","S"];
         const RANK_STREAK_THRESHOLDS = { E:0, D:14, C:35, B:56, A:77, S:98 };
-        const EMERGENCY_QUEST_DURATION = 20 * 60 * 1000; // 20 دقيقة بالمللي ثانية
+        const EMERGENCY_QUEST_DURATION = 20 * 60 * 1000;
 
         // ------------------- دوال مساعدة -------------------
         function getExerciseById(id) {
@@ -975,7 +1055,7 @@
             return Math.min(2.5, bonus);
         }
 
-        // ------------------- Fullscreen API مع البادئات -------------------
+        // ------------------- Fullscreen API -------------------
         function requestFullscreen() {
             const el = document.documentElement;
             if (el.requestFullscreen) return el.requestFullscreen();
@@ -1082,35 +1162,29 @@
                 const activeIds = getActiveExerciseIds();
                 activeIds.forEach(id => { player.dailyProgress[id] = 0; });
                 player.lastDate = today;
-                // إعادة تعيين المهام الطارئة لليوم الجديد
                 player.emergencyQuests = [];
                 player.emergencyQuestDate = null;
                 saveData();
             }
-            // توليد المهام الطارئة إذا لم تكن موجودة لليوم
             generateEmergencyQuests();
             checkCompletionAndReward();
         }
 
-        // ------------------- توليد المهام الطارئة (2 يومياً بمواعيد عشوائية) -------------------
+        // ------------------- توليد المهام الطارئة (2 يومياً) -------------------
         function generateEmergencyQuests() {
             const today = new Date().toISOString().slice(0,10);
             if (player.emergencyQuestDate === today && player.emergencyQuests.length > 0) {
-                // المهام موجودة بالفعل، نتحقق فقط من انتهاء صلاحية المهام المفعلة
                 checkExpiredQuests();
                 return;
             }
-            // توليد مهمتين جديدتين بمواعيد عشوائية
             const coreIds = CORE_EXERCISE_IDS;
             const quests = [];
             const usedExercises = [];
-
-            // توليد وقتين عشوائيين خلال اليوم مع تباعد 4-6 ساعات
             const startHour = 6;
             const endHour = 22;
             const totalMinutes = (endHour - startHour) * 60;
-            const minGap = 240; // 4 ساعات
-            const maxGap = 360; // 6 ساعات
+            const minGap = 240;
+            const maxGap = 360;
             const firstStartMin = Math.floor(Math.random() * (totalMinutes - minGap));
             const gap = minGap + Math.floor(Math.random() * (maxGap - minGap + 1));
             const secondStartMin = firstStartMin + gap;
@@ -1122,13 +1196,11 @@
             const firstDate = new Date(todayDate.getTime() + (startHour * 60 + firstTime) * 60000);
             const secondDate = new Date(todayDate.getTime() + (startHour * 60 + secondTime) * 60000);
 
-            // توليد المهمة الأولى
             const ex1 = coreIds[Math.floor(Math.random() * coreIds.length)];
             usedExercises.push(ex1);
             const q1 = createQuest(ex1);
             q1.triggerTime = firstDate.getTime();
 
-            // توليد المهمة الثانية (تمرين مختلف)
             const available2 = coreIds.filter(id => !usedExercises.includes(id));
             const ex2 = available2.length > 0 ? available2[Math.floor(Math.random() * available2.length)] : coreIds[0];
             const q2 = createQuest(ex2);
@@ -1142,9 +1214,7 @@
 
         function createQuest(exId) {
             const ex = getExerciseById(exId);
-            let extraReps = 0;
-            let desc = '';
-            let rewardXP = 0;
+            let extraReps = 0, desc = '', rewardXP = 0;
             if (exId === 'plank') {
                 extraReps = 30 + Math.floor(Math.random() * 30);
                 desc = `بلانك إضافي +${extraReps} ثانية`;
@@ -1168,7 +1238,6 @@
             };
         }
 
-        // التحقق من المهام التي حان وقت تفعيلها أو انتهت صلاحيتها
         function checkEmergencyQuests() {
             const now = Date.now();
             let updated = false;
@@ -1180,7 +1249,6 @@
                     updated = true;
                     showSystemMessage(`مهمة طارئة: ${q.desc} — المكافأة: ${q.rewardXP} XP`, "#ffaa00");
                     sendWebNotification('مهمة طارئة!', q.desc + ' | مكافأة: ' + q.rewardXP + ' XP');
-                    // جدولة انتهاء الصلاحية
                     setTimeout(() => {
                         const quest = player.emergencyQuests.find(qq => qq === q);
                         if (quest && !quest.completed && !quest.expired) {
@@ -1202,7 +1270,6 @@
             }
         }
 
-        // دالة لإكمال مهمة طارئة (زر اكتمل فقط)
         function completeEmergencyQuest(index) {
             const q = player.emergencyQuests[index];
             if (!q || q.completed || q.expired || !q.triggered) return;
@@ -1224,7 +1291,6 @@
             renderEverything();
         }
 
-        // التحقق من المهام المنتهية (يُستدعى دورياً)
         function checkExpiredQuests() {
             const now = Date.now();
             let updated = false;
@@ -1280,7 +1346,6 @@
             renderEverything();
         }
 
-        // دالة "اكتمل" للتمرين: يضبط التقدم إلى الهدف مباشرة
         function completeExercise(id) {
             let targets = getCurrentTargets();
             if (targets[id] === undefined) return;
@@ -1289,6 +1354,251 @@
             checkCompletionAndReward();
             renderEverything();
             playSound("complete");
+        }
+
+        // ------------------- نظام المؤقت -------------------
+        let timerInterval = null;
+        let timerRemaining = 0;
+        let timerRunning = false;
+        let timerDuration = 60;
+
+        function updateTimerDisplay() {
+            const display = document.getElementById('timerDisplay');
+            const mins = Math.floor(timerRemaining / 60);
+            const secs = timerRemaining % 60;
+            display.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function updateTimerStatus(text) {
+            document.getElementById('timerStatus').textContent = text;
+        }
+
+        function startTimer() {
+            if (timerRunning) return;
+            const input = document.getElementById('timerDurationInput');
+            let duration = parseInt(input.value) || 60;
+            duration = Math.max(5, Math.min(600, duration));
+            input.value = duration;
+            try {
+                localStorage.setItem('timer-duration', duration);
+            } catch(e) {}
+
+            if (timerRemaining <= 0) {
+                timerRemaining = duration;
+                timerDuration = duration;
+            }
+            timerRunning = true;
+            updateTimerStatus('يعمل');
+            document.getElementById('timerStartBtn').textContent = 'تشغيل';
+            timerInterval = setInterval(() => {
+                timerRemaining--;
+                updateTimerDisplay();
+                if (timerRemaining <= 0) {
+                    stopTimer();
+                    showSystemMessage('انتهى الوقت!', '#0f0');
+                    playSound('complete');
+                    updateTimerStatus('انتهى');
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            timerRunning = false;
+            document.getElementById('timerStartBtn').textContent = 'تشغيل';
+            if (timerRemaining > 0) {
+                updateTimerStatus('معلق');
+            }
+        }
+
+        function resetTimer() {
+            stopTimer();
+            const input = document.getElementById('timerDurationInput');
+            let duration = parseInt(input.value) || 60;
+            duration = Math.max(5, Math.min(600, duration));
+            input.value = duration;
+            timerRemaining = duration;
+            timerDuration = duration;
+            updateTimerDisplay();
+            updateTimerStatus('جاهز');
+        }
+
+        function loadTimerDuration() {
+            try {
+                const stored = localStorage.getItem('timer-duration');
+                if (stored) {
+                    const val = parseInt(stored);
+                    if (!isNaN(val) && val >= 5 && val <= 600) {
+                        document.getElementById('timerDurationInput').value = val;
+                        timerRemaining = val;
+                        timerDuration = val;
+                        updateTimerDisplay();
+                    }
+                }
+            } catch(e) {}
+        }
+
+        // ------------------- وضع التدريب (مع التعديلات المطلوبة) -------------------
+        let workoutActive = false;
+        let workoutExerciseQueue = [];
+        let workoutIndex = 0;
+        let plankIntervalId = null;
+
+        function startWorkoutMode() {
+            if (workoutActive) return;
+            const targets = getCurrentTargets();
+            const activeIds = getActiveExerciseIds();
+            // تصفية التمارين غير المكتملة
+            const pendingIds = activeIds.filter(id => (player.dailyProgress[id] || 0) < targets[id]);
+            if (pendingIds.length === 0) {
+                showSystemMessage('لا توجد تمارين متاحة حالياً لتفعيل وضع التدريب.', '#f55');
+                return;
+            }
+            workoutExerciseQueue = pendingIds;
+            workoutIndex = 0;
+            requestFullscreen().catch(() => {});
+            workoutActive = true;
+            showWorkoutExercise();
+        }
+
+        function showWorkoutExercise() {
+            if (workoutIndex >= workoutExerciseQueue.length) {
+                finishWorkout();
+                return;
+            }
+            const id = workoutExerciseQueue[workoutIndex];
+            const ex = getExerciseById(id);
+            const targets = getCurrentTargets();
+            const target = targets[id] || 0;
+            const current = player.dailyProgress[id] || 0;
+
+            // إذا كان التمرين هو البلانك
+            if (id === 'plank') {
+                const remaining = target - current;
+                if (remaining <= 0) {
+                    workoutIndex++;
+                    showWorkoutExercise();
+                    return;
+                }
+                // إيقاف أي مؤقت سابق للبلانك
+                if (plankIntervalId) {
+                    clearInterval(plankIntervalId);
+                    plankIntervalId = null;
+                }
+
+                // إنشاء واجهة التمرين
+                const overlay = document.createElement('div');
+                overlay.id = 'workoutOverlay';
+                overlay.className = 'workout-overlay';
+                overlay.innerHTML = `
+                    <div class="workout-exercise-name">${ex.en}</div>
+                    <div class="workout-progress">${ex.ar} — ${current} / ${target} ثانية</div>
+                    <div class="workout-progress">تمرين ${workoutIndex+1} من ${workoutExerciseQueue.length}</div>
+                    <div style="font-size:3rem; color:#0ff; text-shadow: 0 0 20px cyan; font-family: 'Orbitron', monospace;" id="plankTimerDisplay">${remaining}</div>
+                    <button class="btn-system" style="margin-top:15px;" id="workoutExitBtn">خروج</button>
+                `;
+                document.body.appendChild(overlay);
+
+                let plankRemaining = remaining;
+                const plankDisplay = document.getElementById('plankTimerDisplay');
+
+                // بدء المؤقت
+                plankIntervalId = setInterval(() => {
+                    plankRemaining--;
+                    if (plankDisplay) {
+                        plankDisplay.textContent = plankRemaining;
+                    }
+                    if (plankRemaining <= 0) {
+                        clearInterval(plankIntervalId);
+                        plankIntervalId = null;
+                        // إكمال التمرين إذا كان الوضع لا يزال نشطاً
+                        if (workoutActive) {
+                            player.dailyProgress[id] = target;
+                            saveData();
+                            checkCompletionAndReward();
+                            workoutIndex++;
+                            if (overlay.parentNode) overlay.remove();
+                            showWorkoutExercise();
+                        }
+                    }
+                }, 1000);
+
+                // زر الخروج - يعمل فوراً
+                document.getElementById('workoutExitBtn').onclick = () => {
+                    // إيقاف المؤقت فوراً
+                    if (plankIntervalId) {
+                        clearInterval(plankIntervalId);
+                        plankIntervalId = null;
+                    }
+                    // إزالة الـ overlay
+                    if (overlay.parentNode) overlay.remove();
+                    // الخروج من وضع التدريب
+                    exitWorkoutMode();
+                };
+
+                return;
+            }
+
+            // تمارين عادية (غير زمنية)
+            let overlay = document.getElementById('workoutOverlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'workoutOverlay';
+                overlay.className = 'workout-overlay';
+                document.body.appendChild(overlay);
+            }
+            overlay.innerHTML = `
+                <div class="workout-exercise-name">${ex.en}</div>
+                <div class="workout-progress">${ex.ar} — ${current} / ${target} تكرار</div>
+                <div class="workout-progress">تمرين ${workoutIndex+1} من ${workoutExerciseQueue.length}</div>
+                <button class="workout-btn" id="workoutCompleteBtn">تم الإنجاز</button>
+                <button class="btn-system" style="margin-top:15px;" id="workoutExitBtn">خروج</button>
+            `;
+            overlay.style.display = 'flex';
+
+            document.getElementById('workoutCompleteBtn').onclick = () => {
+                const targets2 = getCurrentTargets();
+                const targetVal = targets2[id] || 0;
+                player.dailyProgress[id] = targetVal;
+                saveData();
+                checkCompletionAndReward();
+                workoutIndex++;
+                showWorkoutExercise();
+                playSound("complete");
+            };
+
+            document.getElementById('workoutExitBtn').onclick = () => {
+                if (overlay.parentNode) overlay.remove();
+                exitWorkoutMode();
+            };
+        }
+
+        function exitWorkoutMode() {
+            // إيقاف مؤقت البلانك إذا كان يعمل
+            if (plankIntervalId) {
+                clearInterval(plankIntervalId);
+                plankIntervalId = null;
+            }
+            // إزالة أي واجهة تدريب
+            const overlay = document.getElementById('workoutOverlay');
+            if (overlay) overlay.remove();
+            // إلغاء وضع ملء الشاشة
+            exitFullscreen().catch(() => {});
+            // إعادة تعيين حالة التدريب
+            workoutActive = false;
+            workoutExerciseQueue = [];
+            workoutIndex = 0;
+            // تحديث الواجهة
+            renderEverything();
+        }
+
+        function finishWorkout() {
+            exitWorkoutMode();
+            showSystemMessage('تم إتمام الواجب اليومي بنجاح!', '#0f0');
+            sendWebNotification('الواجب اليومي مكتمل', 'أحسنت! أنت أقوى من الأمس.');
         }
 
         // ------------------- الإشعارات -------------------
@@ -1391,102 +1701,7 @@
             document.body.appendChild(modal);
         }
 
-        // ------------------- الوضع القتالي (Workout Mode) -------------------
-        let workoutActive = false;
-        let workoutExerciseQueue = [];
-        let workoutIndex = 0;
-
-        function startWorkoutMode() {
-            if (workoutActive) return;
-            const targets = getCurrentTargets();
-            const activeIds = getActiveExerciseIds();
-            const queue = activeIds.filter(id => targets[id] > 0);
-            if (queue.length === 0) {
-                showSystemMessage('لا توجد تمارين مطلوبة اليوم.', '#f55');
-                return;
-            }
-            workoutExerciseQueue = queue;
-            workoutIndex = 0;
-
-            // طلب ملء الشاشة مع البادئات
-            requestFullscreen().catch(() => {});
-
-            workoutActive = true;
-            showWorkoutExercise();
-        }
-
-        function showWorkoutExercise() {
-            if (workoutIndex >= workoutExerciseQueue.length) {
-                finishWorkout();
-                return;
-            }
-            const id = workoutExerciseQueue[workoutIndex];
-            const ex = getExerciseById(id);
-            const targets = getCurrentTargets();
-            const target = targets[id] || 0;
-            const current = player.dailyProgress[id] || 0;
-
-            let overlay = document.getElementById('workoutOverlay');
-            if (!overlay) {
-                overlay = document.createElement('div');
-                overlay.id = 'workoutOverlay';
-                overlay.className = 'workout-overlay';
-                document.body.appendChild(overlay);
-            }
-            overlay.innerHTML = `
-                <div class="workout-exercise-name">${ex.en}</div>
-                <div class="workout-progress">${ex.ar} — ${current} / ${target} ${(id === 'plank') ? 'ثانية' : 'تكرار'}</div>
-                <div class="workout-progress">تمرين ${workoutIndex+1} من ${workoutExerciseQueue.length}</div>
-                <button class="workout-btn" id="workoutCompleteBtn">تم الإنجاز</button>
-                <button class="btn-system" style="margin-top:15px;" id="workoutExitBtn">خروج</button>
-            `;
-            overlay.style.display = 'flex';
-
-            document.getElementById('workoutCompleteBtn').onclick = () => {
-                const targets2 = getCurrentTargets();
-                const targetVal = targets2[id] || 0;
-                const currentVal = player.dailyProgress[id] || 0;
-                if (currentVal < targetVal) {
-                    const increment = (id === 'plank') ? 10 : 5;
-                    const newVal = Math.min(targetVal, currentVal + increment);
-                    player.dailyProgress[id] = newVal;
-                    saveData();
-                    if (newVal >= targetVal) {
-                        workoutIndex++;
-                    }
-                    renderEverything();
-                    showWorkoutExercise();
-                } else {
-                    workoutIndex++;
-                    showWorkoutExercise();
-                }
-                checkCompletionAndReward();
-            };
-
-            document.getElementById('workoutExitBtn').onclick = () => {
-                exitWorkoutMode();
-            };
-
-            overlay.style.transition = 'opacity 0.3s';
-            overlay.style.opacity = '1';
-        }
-
-        function exitWorkoutMode() {
-            workoutActive = false;
-            const overlay = document.getElementById('workoutOverlay');
-            if (overlay) overlay.remove();
-            // الخروج من ملء الشاشة مع البادئات
-            exitFullscreen().catch(() => {});
-            renderEverything();
-        }
-
-        function finishWorkout() {
-            exitWorkoutMode();
-            showSystemMessage('تم إتمام الواجب اليومي بنجاح!', '#0f0');
-            sendWebNotification('الواجب اليومي مكتمل', 'أحسنت! أنت أقوى من الأمس.');
-        }
-
-        // ------------------- عرض التمارين الأساسية والمضافة -------------------
+        // ------------------- عرض التمارين -------------------
         function renderExercises() {
             const container = document.getElementById("exerciseGrid");
             if (!container) return;
@@ -1495,7 +1710,6 @@
 
             const fragment = document.createDocumentFragment();
 
-            // التمارين الأساسية (إجبارية)
             CORE_EXERCISE_IDS.forEach(id => {
                 const ex = getExerciseById(id);
                 if (!ex) return;
@@ -1523,7 +1737,6 @@
                 fragment.appendChild(tile);
             });
 
-            // التمارين المضافة (غير الأساسية)
             const extraIds = activeIds.filter(id => !CORE_EXERCISE_IDS.includes(id));
             extraIds.forEach(id => {
                 const ex = getExerciseById(id);
@@ -1628,19 +1841,17 @@
             });
         }
 
-        // ------------------- تحديث الملف الشخصي (الأفاتار) -------------------
+        // ------------------- تحديث الملف الشخصي -------------------
         function updateProfilePage() {
             const avatar = document.getElementById('profileAvatar');
             if (avatar) {
                 let displayName = player.name.trim() || 'صياد';
                 avatar.textContent = displayName;
-                // ضبط حجم الخط تلقائياً حسب طول الاسم باستخدام clamp
                 const len = displayName.length;
                 if (len <= 2) avatar.style.fontSize = 'clamp(1.2rem, 5vw, 2.2rem)';
                 else if (len <= 4) avatar.style.fontSize = 'clamp(1rem, 4vw, 1.8rem)';
                 else avatar.style.fontSize = 'clamp(0.7rem, 3vw, 1.2rem)';
             }
-            // تحديث باقي الحقول
             const pRank = document.getElementById('profileRank');
             const pStreak = document.getElementById('profileStreak');
             const pXp = document.getElementById('profileXp');
@@ -1665,7 +1876,7 @@
             }
         }
 
-        // ------------------- عرض المهام الطارئة (المفعلة فقط) -------------------
+        // ------------------- عرض المهام الطارئة -------------------
         function renderEmergencyQuests() {
             const container = document.getElementById('emergencyContent');
             if (!container) return;
@@ -1692,7 +1903,7 @@
                         <div class="emergency-text">${q.desc}</div>
                         <div class="stat-row">
                             <span>التقدم: ${q.current} / ${q.target}</span>
-                            <span class="quest-timer">⏳ ${timeStr}</span>
+                            <span class="quest-timer">المدة المتبقية: ${timeStr}</span>
                         </div>
                         <div class="quest-actions">
                             <button class="btn-system quest-complete-btn" onclick="completeEmergencyQuest(${originalIndex})">اكتمل</button>
@@ -1757,10 +1968,6 @@
 
             updateProfilePage();
             applySThemeAndTitle();
-
-            if (workoutActive) {
-                showWorkoutExercise();
-            }
         }
 
         // ------------------- الإعدادات الأولية -------------------
@@ -1769,6 +1976,27 @@
             checkDateChange();
             renderEverything();
 
+            // ---- أحداث المؤقت ----
+            loadTimerDuration();
+            document.getElementById('timerStartBtn').addEventListener('click', startTimer);
+            document.getElementById('timerStopBtn').addEventListener('click', stopTimer);
+            document.getElementById('timerResetBtn').addEventListener('click', resetTimer);
+            document.getElementById('timerDurationInput').addEventListener('change', function() {
+                let val = parseInt(this.value) || 60;
+                val = Math.max(5, Math.min(600, val));
+                this.value = val;
+                if (!timerRunning) {
+                    timerRemaining = val;
+                    timerDuration = val;
+                    updateTimerDisplay();
+                    updateTimerStatus('جاهز');
+                }
+                try {
+                    localStorage.setItem('timer-duration', val);
+                } catch(e) {}
+            });
+
+            // ---- التنقل بين الصفحات ----
             document.querySelectorAll(".sys-nav-item[data-page]").forEach(nav => {
                 nav.addEventListener("click", () => {
                     let pageId = nav.dataset.page + "-page";
